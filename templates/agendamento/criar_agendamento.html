@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Agendamento - Sistema de Agendamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info .welcome {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .user-info .details {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 12px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-menu a:hover {
+            background: #f0f7ff;
+            color: #3498db;
+        }
+
+        .nav-menu a.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin: 20px;
+            margin-left: 0;
+        }
+
+        .content h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-text {
+            background: #e8f4fd;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #c33;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #363;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #363;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Formulário Horizontal */
+        .form-horizontal {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .date-time-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .date-group, .time-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .date-fields, .time-fields {
+            display: flex;
+            gap: 15px;
+        }
+
+        .date-fields > div, .time-fields > div {
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+            border: 1px solid #ddd;
+            flex: 0.5;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+            transform: translateY(-1px);
+        }
+
+        .field-error {
+            color: #c33;
+            font-size: 13px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Calendário Mini */
+        .calendario-mini {
+            margin-top: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .calendario-mini-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .calendario-mini-mes {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .calendario-mini-navegacao {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-calendario-mini {
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-calendario-mini:hover {
+            background: #f8f9fa;
+        }
+
+        .calendario-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            font-size: 11px;
+        }
+
+        .calendario-mini-dia-semana {
+            text-align: center;
+            font-weight: 600;
+            color: #7f8c8d;
+            padding: 5px 0;
+            font-size: 10px;
+        }
+
+        .calendario-mini-dia {
+            text-align: center;
+            padding: 6px 2px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .calendario-mini-dia:hover {
+            background: #e3f2fd;
+        }
+
+        .calendario-mini-dia.vazio {
+            background: transparent;
+            cursor: default;
+        }
+
+        .calendario-mini-dia.hoje {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            font-weight: 600;
+        }
+
+        .calendario-mini-dia.selecionado {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendario-mini-dia.ocupado {
+            background: #f8d7da;
+            color: #721c24;
+            cursor: not-allowed;
+        }
+
+        .calendario-mini-dia.passado {
+            background: #f8f9fa;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .calendario-mini-dia.disponivel {
+            background: #d4edda;
+            color: #155724;
+            cursor: pointer;
+        }
+
+        .calendario-mini-legenda {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            font-size: 10px;
+        }
+
+        .item-legenda-mini {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .cor-legenda-mini {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            border: 1px solid #ddd;
+        }
+
+        /* Status de disponibilidade */
+        .status-disponibilidade {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status-disponivel {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .status-indisponivel {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .date-time-row {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: calc(100% - 40px);
+                margin: 20px;
+            }
+            
+            .content {
+                margin: 20px;
+                margin-top: 0;
+            }
+            
+            .date-fields, .time-fields {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+
+            .calendario-mini-grid {
+                gap: 1px;
+            }
+
+            .calendario-mini-dia {
+                padding: 4px 1px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Raymundo da Fonte</h1>
+                <p>Sistema de Agendamento de Salas</p>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="user-info">
+                <div class="welcome">Bem-vindo, {{ user.username }}</div>
+                <div class="details">{{ user.matricula }} | {{ user.departamento }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <div class="sidebar">
+            <h3>Menu Principal</h3>
+            <ul class="nav-menu">
+                <li><a href="/">🏠 Início</a></li>
+                <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                <li><a href="/novo-agendamento/" class="active">📅 Novo Agendamento</a></li>
+                <li><a href="/agendamentos/">📋 Agendamentos</a></li>
+                <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
+                <li><a href="/relatorios/">📈 Relatórios</a></li>
+                <li><a href="/calendario/">📅 Calendário</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="/admin/">⚙️ Administração</a></li>
+                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+                {% else %}
+                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="content">
+            <h2>Novo Agendamento</h2>
+            
+            <div class="info-text">
+                <span style="font-size: 16px;">💡</span>
+                <div>
+                    <strong>Informação:</strong> Para agendamentos de um único dia, preencha a mesma data nos campos "Data Inicial" e "Data Final".
+                    <div class="form-hint">Todos os campos marcados com * são obrigatórios.</div>
+                </div>
+            </div>
+
+            <!-- Exibir mensagens do Django -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'error' %}error-message{% elif message.tags == 'success' %}success-message{% else %}info-text{% endif %}">
+                        <span style="font-size: 16px;">
+                            {% if message.tags == 'error' %}❌
+                            {% elif message.tags == 'success' %}✅
+                            {% else %}💡{% endif %}
+                        </span>
+                        <div>{{ message }}</div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <!-- Exibir erros de formulário não relacionados a campos específicos -->
+            {% if form.non_field_errors %}
+                <div class="error-message">
+                    <span style="font-size: 16px;">❌</span>
+                    <div>
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <form method="post" class="form-horizontal" id="form-agendamento">
+                {% csrf_token %}
+                
+                <!-- Seção: Informações da Sala -->
+                <div class="form-section">
+                    <h3>🏢 Informações da Sala</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_sala" class="required">Sala</label>
+                            {{ form.sala }}
+                            {% if form.sala.errors %}
+                            <div class="field-error">
+                                ❌ {% for error in form.sala.errors %}{{ error }}{% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Calendário Mini de Disponibilidade -->
+                    <div class="calendario-mini" id="calendario-mini" style="display: none;">
+                        <div class="calendario-mini-header">
+                            <div class="calendario-mini-mes" id="calendario-mini-mes">Carregando...</div>
+                            <div class="calendario-mini-navegacao">
+                                <button type="button" class="btn-calendario-mini" onclick="mudarMes(-1)">◀</button>
+                                <button type="button" class="btn-calendario-mini" onclick="mudarMes(0)">Hoje</button>
+                                <button type="button" class="btn-calendario-mini" onclick="mudarMes(1)">▶</button>
+                            </div>
+                        </div>
+                        
+                        <div class="calendario-mini-grid" id="calendario-mini-dias-semana">
+                            <div class="calendario-mini-dia-semana">D</div>
+                            <div class="calendario-mini-dia-semana">S</div>
+                            <div class="calendario-mini-dia-semana">T</div>
+                            <div class="calendario-mini-dia-semana">Q</div>
+                            <div class="calendario-mini-dia-semana">Q</div>
+                            <div class="calendario-mini-dia-semana">S</div>
+                            <div class="calendario-mini-dia-semana">S</div>
+                        </div>
+                        
+                        <div class="calendario-mini-grid" id="calendario-mini-dias"></div>
+                        
+                        <div class="calendario-mini-legenda">
+                            <div class="item-legenda-mini">
+                                <div class="cor-legenda-mini" style="background: #3498db;"></div>
+                                <span>Sel.</span>
+                            </div>
+                            <div class="item-legenda-mini">
+                                <div class="cor-legenda-mini" style="background: #d4edda;"></div>
+                                <span>Disp.</span>
+                            </div>
+                            <div class="item-legenda-mini">
+                                <div class="cor-legenda-mini" style="background: #f8d7da;"></div>
+                                <span>Ocup.</span>
+                            </div>
+                            <div class="item-legenda-mini">
+                                <div class="cor-legenda-mini" style="background: #fff3cd;"></div>
+                                <span>Hoje</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Período do Agendamento -->
+                <div class="form-section">
+                    <h3>📅 Período do Agendamento</h3>
+                    
+                    <!-- Status de Disponibilidade em Tempo Real -->
+                    <div class="status-disponibilidade" id="status-disponibilidade"></div>
+                    
+                    <div class="date-time-row">
+                        <!-- Datas -->
+                        <div class="date-group">
+                            <div class="date-fields">
+                                <div class="form-group">
+                                    <label for="id_data_inicio" class="required">Data Inicial</label>
+                                    {{ form.data_inicio }}
+                                    {% if form.data_inicio.errors %}
+                                    <div class="field-error">
+                                        ❌ {% for error in form.data_inicio.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-hint">
+                                        📅 Data do primeiro dia do agendamento
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_data_fim" class="required">Data Final</label>
+                                    {{ form.data_fim }}
+                                    {% if form.data_fim.errors %}
+                                    <div class="field-error">
+                                        ❌ {% for error in form.data_fim.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-hint">
+                                        📅 Data do último dia do agendamento
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Horários -->
+                        <div class="time-group">
+                            <div class="time-fields">
+                                <div class="form-group">
+                                    <label for="id_hora_inicio" class="required">Hora de Início</label>
+                                    {{ form.hora_inicio }}
+                                    {% if form.hora_inicio.errors %}
+                                    <div class="field-error">
+                                        ❌ {% for error in form.hora_inicio.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-hint">
+                                        🕐 Horário de início (06:00 - 21:30)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_hora_fim" class="required">Hora de Término</label>
+                                    {{ form.hora_fim }}
+                                    {% if form.hora_fim.errors %}
+                                    <div class="field-error">
+                                        ❌ {% for error in form.hora_fim.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-hint">
+                                        🕐 Horário de término (até 22:00)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Descrição -->
+                <div class="form-section">
+                    <h3>📝 Descrição do Agendamento</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_descricao">Descrição</label>
+                            {{ form.descricao }}
+                            <div class="form-hint">
+                                💡 Descreva o propósito deste agendamento para facilitar a identificação.
+                            </div>
+                            {% if form.descricao.errors %}
+                            <div class="field-error">
+                                ❌ {% for error in form.descricao.errors %}{{ error }}{% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botões de Ação -->
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" id="btn-submit">
+                        <span style="font-size: 16px;">✅</span>
+                        Agendar Sala
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        <span style="font-size: 16px;">❌</span>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Transformando a excelência na gestão em vantagem competitiva para sua empresa.</p>
+        <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte</p>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let mesAtual = new Date().getMonth() + 1;
+        let anoAtual = new Date().getFullYear();
+        let salaSelecionada = null;
+        let diasOcupados = [];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validações básicas
+            const startDateInput = document.getElementById('id_data_inicio');
+            const endDateInput = document.getElementById('id_data_fim');
+            const startTimeInput = document.getElementById('id_hora_inicio');
+            const endTimeInput = document.getElementById('id_hora_fim');
+            
+            // Definir data mínima como hoje
+            const today = new Date().toISOString().split('T')[0];
+            if (startDateInput) {
+                startDateInput.setAttribute('min', today);
+            }
+            if (endDateInput) {
+                endDateInput.setAttribute('min', today);
+            }
+            
+            // Validação: data final não pode ser anterior à data inicial
+            if (startDateInput && endDateInput) {
+                startDateInput.addEventListener('change', function() {
+                    endDateInput.setAttribute('min', this.value);
+                    if (endDateInput.value && endDateInput.value < this.value) {
+                        endDateInput.value = this.value;
+                    }
+                    verificarDisponibilidadeTempoReal();
+                });
+                
+                endDateInput.addEventListener('change', function() {
+                    if (this.value < startDateInput.value) {
+                        alert('❌ A data final não pode ser anterior à data inicial!');
+                        this.value = startDateInput.value;
+                    }
+                    verificarDisponibilidadeTempoReal();
+                });
+            }
+            
+            // Validação: hora final não pode ser anterior à hora inicial
+            if (startTimeInput && endTimeInput) {
+                startTimeInput.addEventListener('change', function() {
+                    if (endTimeInput.value && endTimeInput.value <= this.value) {
+                        const [hours, minutes] = this.value.split(':');
+                        let newHour = parseInt(hours) + 1;
+                        if (newHour > 23) newHour = 23;
+                        endTimeInput.value = `${newHour.toString().padStart(2, '0')}:${minutes}`;
+                    }
+                    verificarDisponibilidadeTempoReal();
+                });
+
+                endTimeInput.addEventListener('change', function() {
+                    if (startTimeInput.value && this.value <= startTimeInput.value) {
+                        alert('❌ A hora final deve ser posterior à hora inicial!');
+                        const [hours, minutes] = startTimeInput.value.split(':');
+                        let newHour = parseInt(hours) + 1;
+                        if (newHour > 23) newHour = 23;
+                        this.value = `${newHour.toString().padStart(2, '0')}:${minutes}`;
+                    }
+                    verificarDisponibilidadeTempoReal();
+                });
+            }
+
+            // Inicializar calendário quando uma sala for selecionada
+            const selectSala = document.getElementById('id_sala');
+            if (selectSala) {
+                selectSala.addEventListener('change', function() {
+                    salaSelecionada = this.value;
+                    if (salaSelecionada) {
+                        document.getElementById('calendario-mini').style.display = 'block';
+                        carregarCalendario();
+                    } else {
+                        document.getElementById('calendario-mini').style.display = 'none';
+                    }
+                });
+            }
+
+            // Placeholder para descrição
+            const descricaoTextarea = document.getElementById('id_descricao');
+            if (descricaoTextarea && !descricaoTextarea.getAttribute('placeholder')) {
+                descricaoTextarea.setAttribute('placeholder', 'Ex: Reunião de planejamento semanal, Treinamento de novos colaboradores, Apresentação para clientes...');
+            }
+        });
+
+        // Funções do Calendário Mini
+        function carregarCalendario() {
+            if (!salaSelecionada) return;
+
+            // Mostrar loading
+            document.getElementById('calendario-mini-dias').innerHTML = '<div class="loading" style="grid-column: 1 / -1; margin: 10px auto;"></div>';
+
+            // Buscar dias ocupados da API
+            fetch(`/api/dias-ocupados/${salaSelecionada}/?mes=${mesAtual}&ano=${anoAtual}`)
+                .then(response => response.json())
+                .then(data => {
+                    diasOcupados = data.dias_ocupados || [];
+                    renderizarCalendario();
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar calendário:', error);
+                    renderizarCalendario();
+                });
+        }
+
+        function renderizarCalendario() {
+            const calendarioDias = document.getElementById('calendario-mini-dias');
+            const calendarioMes = document.getElementById('calendario-mini-mes');
+            
+            // Atualizar título do mês
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
+                          'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            calendarioMes.textContent = `${meses[mesAtual - 1]} ${anoAtual}`;
+
+            // Obter primeiro dia do mês e quantidade de dias
+            const primeiroDia = new Date(anoAtual, mesAtual - 1, 1);
+            const ultimoDia = new Date(anoAtual, mesAtual, 0);
+            const diasNoMes = ultimoDia.getDate();
+            const diaInicioSemana = primeiroDia.getDay();
+
+            // Limpar calendário
+            calendarioDias.innerHTML = '';
+
+            // Dias vazios no início
+            for (let i = 0; i < diaInicioSemana; i++) {
+                const diaVazio = document.createElement('div');
+                diaVazio.className = 'calendario-mini-dia vazio';
+                calendarioDias.appendChild(diaVazio);
+            }
+
+            // Dias do mês
+            const hoje = new Date();
+            const dataInicioInput = document.getElementById('id_data_inicio');
+            const dataFimInput = document.getElementById('id_data_fim');
+            const dataInicioSelecionada = dataInicioInput ? new Date(dataInicioInput.value) : null;
+            const dataFimSelecionada = dataFimInput ? new Date(dataFimInput.value) : null;
+
+            for (let dia = 1; dia <= diasNoMes; dia++) {
+                const diaElement = document.createElement('div');
+                diaElement.className = 'calendario-mini-dia';
+                diaElement.textContent = dia;
+                diaElement.dataset.dia = dia;
+                diaElement.dataset.mes = mesAtual;
+                diaElement.dataset.ano = anoAtual;
+
+                const dataAtual = new Date(anoAtual, mesAtual - 1, dia);
+                const dataHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+
+                // Verificar se é hoje
+                if (dataAtual.getTime() === dataHoje.getTime()) {
+                    diaElement.classList.add('hoje');
+                }
+
+                // Verificar se é passado
+                if (dataAtual < dataHoje) {
+                    diaElement.classList.add('passado');
+                }
+
+                // Verificar se está ocupado
+                if (diasOcupados.includes(dia)) {
+                    diaElement.classList.add('ocupado');
+                } else if (dataAtual >= dataHoje) {
+                    diaElement.classList.add('disponivel');
+                }
+
+                // Verificar se está selecionado
+                if (dataInicioSelecionada && dataFimSelecionada) {
+                    if (dataAtual >= dataInicioSelecionada && dataAtual <= dataFimSelecionada) {
+                        diaElement.classList.add('selecionado');
+                    }
+                }
+
+                // Adicionar evento de clique apenas para dias disponíveis
+                if (!diaElement.classList.contains('ocupado') && !diaElement.classList.contains('passado')) {
+                    diaElement.addEventListener('click', function() {
+                        selecionarData(this);
+                    });
+                }
+
+                calendarioDias.appendChild(diaElement);
+            }
+        }
+
+        function selecionarData(elemento) {
+            const dia = parseInt(elemento.dataset.dia);
+            const mes = parseInt(elemento.dataset.mes);
+            const ano = parseInt(elemento.dataset.ano);
+            
+            const dataSelecionada = new Date(ano, mes - 1, dia);
+            const dataFormatada = dataSelecionada.toISOString().split('T')[0];
+
+            const dataInicioInput = document.getElementById('id_data_inicio');
+            const dataFimInput = document.getElementById('id_data_fim');
+
+            if (!dataInicioInput.value) {
+                // Primeira seleção - definir data inicial
+                dataInicioInput.value = dataFormatada;
+                dataFimInput.value = dataFormatada;
+            } else if (!dataFimInput.value) {
+                // Segunda seleção - definir data final
+                const dataInicio = new Date(dataInicioInput.value);
+                if (dataSelecionada >= dataInicio) {
+                    dataFimInput.value = dataFormatada;
+                } else {
+                    // Se selecionou uma data anterior, trocar as datas
+                    dataFimInput.value = dataInicioInput.value;
+                    dataInicioInput.value = dataFormatada;
+                }
+            } else {
+                // Nova seleção - resetar para data única
+                dataInicioInput.value = dataFormatada;
+                dataFimInput.value = dataFormatada;
+            }
+
+            // Atualizar calendário e verificar disponibilidade
+            carregarCalendario();
+            verificarDisponibilidadeTempoReal();
+        }
+
+        function mudarMes(direcao) {
+            if (direcao === 0) {
+                // Hoje
+                const hoje = new Date();
+                mesAtual = hoje.getMonth() + 1;
+                anoAtual = hoje.getFullYear();
+            } else {
+                // Navegação
+                mesAtual += direcao;
+                if (mesAtual > 12) {
+                    mesAtual = 1;
+                    anoAtual += 1;
+                } else if (mesAtual < 1) {
+                    mesAtual = 12;
+                    anoAtual -= 1;
+                }
+            }
+            carregarCalendario();
+        }
+
+        function verificarDisponibilidadeTempoReal() {
+            if (!salaSelecionada) return;
+
+            const dataInicio = document.getElementById('id_data_inicio').value;
+            const dataFim = document.getElementById('id_data_fim').value;
+            const horaInicio = document.getElementById('id_hora_inicio').value;
+            const horaFim = document.getElementById('id_hora_fim').value;
+
+            if (!dataInicio || !dataFim || !horaInicio || !horaFim) return;
+
+            const statusElement = document.getElementById('status-disponibilidade');
+            statusElement.style.display = 'block';
+            statusElement.innerHTML = '<div class="loading"></div> Verificando disponibilidade...';
+
+            fetch(`/api/verificar-disponibilidade/${salaSelecionada}/?data_inicio=${dataInicio}&data_fim=${dataFim}&hora_inicio=${horaInicio}&hora_fim=${horaFim}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.disponivel) {
+                        statusElement.className = 'status-disponibilidade status-disponivel';
+                        statusElement.innerHTML = '✅ Período disponível para agendamento!';
+                    } else {
+                        statusElement.className = 'status-disponibilidade status-indisponivel';
+                        let mensagem = `❌ Conflito de agendamento detectado:<br>`;
+                        data.conflitos.forEach(conflito => {
+                            mensagem += `• ${conflito.data} - ${conflito.horario}<br>`;
+                        });
+                        statusElement.innerHTML = mensagem;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar disponibilidade:', error);
+                    statusElement.className = 'status-disponibilidade status-indisponivel';
+                    statusElement.innerHTML = '❌ Erro ao verificar disponibilidade.';
+                });
+        }
+    </script>
+</body>
+</html>

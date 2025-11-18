@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Agendamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .menu {
+            background: #2c3e50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .menu a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        .menu a:hover {
+            color: #3498db;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #e67e22;
+        }
+        .btn-cancel {
+            background-color: #95a5a6;
+        }
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .errorlist {
+            color: #dc3545;
+            margin: 5px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="/">Início</a>
+        <a href="/salas/">Salas</a>
+        <a href="/novo-agendamento/">Novo Agendamento</a>
+        <a href="/gendamentos/"> Agendamentos</a>
+        <a href="/disponibilidade/">Disponibilidade</a>
+        <a href="/calendario/">Calendário</a>
+        <a href="/relatorios/">Relatórios</a>
+        {% if user.is_authenticated %}
+            <a href="/admin/">Admin</a>
+            <a href="/usuarios/logout/">Logout ({{ user.username }})</a>
+        {% else %}
+            <a href="/usuarios/login/">Login</a>
+            <a href="/usuarios/register/">Registrar</a>
+        {% endif %}
+    </div>
+
+    <h1>Editar Agendamento</h1>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_sala">Sala:</label>
+            {{ form.sala }}
+            {% if form.sala.errors %}
+                <div class="errorlist">{{ form.sala.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_data">Data:</label>
+            {{ form.data }}
+            {% if form.data.errors %}
+                <div class="errorlist">{{ form.data.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_hora_inicio">Hora de Início:</label>
+            {{ form.hora_inicio }}
+            {% if form.hora_inicio.errors %}
+                <div class="errorlist">{{ form.hora_inicio.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_hora_fim">Hora de Término:</label>
+            {{ form.hora_fim }}
+            {% if form.hora_fim.errors %}
+                <div class="errorlist">{{ form.hora_fim.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_descricao">Descrição:</label>
+            {{ form.descricao }}
+            {% if form.descricao.errors %}
+                <div class="errorlist">{{ form.descricao.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <button type="submit">Atualizar Agendamento</button>
+        <a href="/agendamentos/" class="btn-cancel" style="padding: 12px 24px; text-decoration: none; display: inline-block;">Cancelar</a>
+    </form>
+</body>
+</html>

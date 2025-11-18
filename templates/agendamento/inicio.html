@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início - Sistema de Agendamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info .welcome {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .user-info .details {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 12px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-menu a:hover {
+            background: #f0f7ff;
+            color: #3498db;
+        }
+
+        .nav-menu a.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            margin: 20px;
+            margin-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Estatísticas Horizontais */
+        .stats-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        /* Conteúdo Principal Horizontal */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .left-column, .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            flex: 1;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Lista de Agendamentos */
+        .agendamentos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .agendamento-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.2s;
+        }
+
+        .agendamento-item:hover {
+            transform: translateX(5px);
+        }
+
+        .agendamento-icon {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .agendamento-content {
+            flex: 1;
+        }
+
+        .agendamento-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .agendamento-details {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .agendamento-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .agendamento-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        /* Lista de Salas */
+        .salas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .sala-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .sala-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .sala-nome {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .sala-info {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+        }
+
+        /* Ações Rápidas */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .action-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Botões */
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-ativo {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-futuro {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .salas-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: calc(100% - 40px);
+                margin: 20px;
+            }
+            
+            .content {
+                margin: 20px;
+                margin-top: 0;
+            }
+            
+            .stats-row {
+                flex-direction: column;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .salas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Raymundo da Fonte</h1>
+                <p>Sistema de Agendamento de Salas</p>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="user-info">
+                <div class="welcome">Bem-vindo, {{ user.username }}</div>
+                <div class="details">{{ user.matricula }} | {{ user.departamento }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <div class="sidebar">
+            <h3>Menu Principal</h3>
+            <ul class="nav-menu">
+                <li><a href="/" class="active">🏠 Início</a></li>
+                <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
+                <li><a href="/agendamentos/">📋 Agendamentos</a></li>
+                <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
+                <li><a href="/calendario/">📅 Calendário</a></li>
+                <li><a href="/relatorios/">📈 Relatórios</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="/admin/">⚙️ Administração</a></li>
+                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+                {% else %}
+                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="content">
+            <!-- Estatísticas -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-number">{{ salas.count }}</div>
+                    <div class="stat-label">Salas Disponíveis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ meus_agendamentos.count }}</div>
+                    <div class="stat-label">Meus Agendamentos</div>
+                </div>
+                <div class="stat-card">
+                    <a href="/novo-agendamento/" class="btn-primary" style="text-decoration: none;">
+                        <span style="font-size: 16px;">➕</span>
+                        Novo Agendamento
+                    </a>
+                </div>
+            </div>
+
+            <!-- Conteúdo Principal -->
+            <div class="main-content">
+                <!-- Coluna Esquerda -->
+                <div class="left-column">
+                    <!-- Agendamentos Recentes -->
+                    <div class="card">
+                        <h2>📋 Agendamentos Recentes</h2>
+                        {% if meus_agendamentos %}
+                        <div class="agendamentos-list">
+                            {% for agendamento in meus_agendamentos %}
+                            <div class="agendamento-item">
+                                <div class="agendamento-icon">
+                                    {{ agendamento.sala.nome|slice:":1" }}
+                                </div>
+                                <div class="agendamento-content">
+                                    <div class="agendamento-title">
+                                        {{ agendamento.sala.nome }}
+                                        {% if agendamento.data_inicio <= hoje and agendamento.data_fim >= hoje %}
+                                            <span class="status-badge status-ativo">Ativo</span>
+                                        {% elif agendamento.data_inicio > hoje %}
+                                            <span class="status-badge status-futuro">Futuro</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="agendamento-details">
+                                        {% if agendamento.data_inicio == agendamento.data_fim %}
+                                            {{ agendamento.data_inicio|date:"d/m/Y" }}
+                                        {% else %}
+                                            {{ agendamento.data_inicio|date:"d/m/Y" }} a {{ agendamento.data_fim|date:"d/m/Y" }}
+                                        {% endif %}
+                                        | {{ agendamento.hora_inicio|time:"H:i" }} - {{ agendamento.hora_fim|time:"H:i" }}
+                                    </div>
+                                    {% if agendamento.descricao %}
+                                    <div class="agendamento-desc">{{ agendamento.descricao|truncatewords:10 }}</div>
+                                    {% endif %}
+                                    <div class="agendamento-actions">
+                                        <a href="/editar-agendamento/{{ agendamento.id }}/" style="font-size: 12px; color: #f39c12; text-decoration: none;">✏️ Editar</a>
+                                        <a href="/excluir-agendamento/{{ agendamento.id }}/" style="font-size: 12px; color: #e74c3c; text-decoration: none;">🗑️ Excluir</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <h3>Nenhum agendamento encontrado</h3>
+                            <p>Você ainda não fez nenhum agendamento.</p>
+                            <a href="/novo-agendamento/" class="btn-primary">Fazer Primeiro Agendamento</a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Ações Rápidas -->
+                    <div class="card">
+                        <h2>🚀 Ações Rápidas</h2>
+                        <div class="quick-actions">
+                            <a href="/salas/" class="action-btn">
+                                <div class="action-icon">🏢</div>
+                                <div class="action-text">Ver Todas as Salas</div>
+                            </a>
+                            <a href="/meus-agendamentos/" class="action-btn">
+                                <div class="action-icon">📋</div>
+                                <div class="action-text">Meus Agendamentos</div>
+                            </a>
+                            <a href="/novo-agendamento/" class="action-btn">
+                                <div class="action-icon">📅</div>
+                                <div class="action-text">Novo Agendamento</div>
+                            </a>
+                            <a href="/disponibilidade/" class="action-btn">
+                                <div class="action-icon">📊</div>
+                                <div class="action-text">Ver Disponibilidade</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita -->
+                <div class="right-column">
+                    <!-- Salas Disponíveis -->
+                    <div class="card">
+                        <h2>🏢 Salas Disponíveis</h2>
+                        {% if salas %}
+                        <div class="salas-grid">
+                            {% for sala in salas %}
+                            <div class="sala-item">
+                                <div class="sala-nome">{{ sala.nome }}</div>
+                                <div class="sala-info">
+                                    Capacidade: {{ sala.capacidade }} pessoas
+                                    {% if sala.descricao %}
+                                    <br><small>{{ sala.descricao|truncatewords:8 }}</small>
+                                    {% endif %}
+                                </div>
+                                <a href="/novo-agendamento/{{ sala.id }}/" class="btn-primary" style="padding: 8px 16px; font-size: 12px;">
+                                    Agendar
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <h3>Nenhuma sala disponível</h3>
+                            <p>Não há salas cadastradas no momento.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Transformando a excelência na gestão em vantagem competitiva para sua empresa.</p>
+        <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte</p>
+    </div>
+</body>
+</html>

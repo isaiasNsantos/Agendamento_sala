@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda - Visualização Google Calendar</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --light-gray: #f1f3f4;
+            --border-gray: #dadce0;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --today-color: #1a73e8;
+            --event-color: #e6f4ea;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fff;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .header h1 {
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--text-dark);
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .current-date {
+            font-size: 18px;
+            font-weight: 500;
+            min-width: 180px;
+            text-align: center;
+        }
+        
+        .view-options {
+            display: flex;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .view-option {
+            padding: 8px 16px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .view-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .calendar-container {
+            background-color: white;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background-color: var(--light-gray);
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .day-header {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            min-height: 120px;
+            border-right: 1px solid var(--border-gray);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 8px;
+            position: relative;
+        }
+        
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+        
+        .day-number {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .today .day-number {
+            background-color: var(--today-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .event {
+            background-color: var(--event-color);
+            border-left: 3px solid var(--primary-color);
+            padding: 4px 8px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .event:hover {
+            background-color: #d4eadf;
+        }
+        
+        .other-month {
+            color: var(--text-light);
+            background-color: #f8f9fa;
+        }
+        
+        .task-list {
+            margin-top: 30px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .task-list h2 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            margin-right: 12px;
+        }
+        
+        .task-text {
+            font-size: 14px;
+        }
+        
+        .google-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .google-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 80px;
+            }
+            
+            .event {
+                font-size: 10px;
+                padding: 2px 4px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Agenda</h1>
+            <div class="header-controls">
+                <div class="date-navigation">
+                    <button class="nav-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </button>
+                    <div class="current-date">Novembro 2025</div>
+                    <button class="nav-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="view-options">
+                    <button class="view-option">Dia</button>
+                    <button class="view-option">Semana</button>
+                    <button class="view-option active">Mês</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="day-header">DOM.</div>
+                <div class="day-header">SEG.</div>
+                <div class="day-header">TER.</div>
+                <div class="day-header">QUA.</div>
+                <div class="day-header">QUI.</div>
+                <div class="day-header">SEX.</div>
+                <div class="day-header">SÁB.</div>
+            </div>
+            
+            <div class="calendar-grid">
+                <!-- Semana 1 -->
+                <div class="calendar-day other-month">
+                    <div class="day-number">26</div>
+                </div>
+                <div class="calendar-day other-month">
+                    <div class="day-number">27</div>
+                </div>
+                <div class="calendar-day other-month">
+                    <div class="day-number">28</div>
+                </div>
+                <div class="calendar-day other-month">
+                    <div class="day-number">29</div>
+                </div>
+                <div class="calendar-day other-month">
+                    <div class="day-number">30</div>
+                </div>
+                <div class="calendar-day other-month">
+                    <div class="day-number">31</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">1</div>
+                    <div class="event">nov.</div>
+                </div>
+                
+                <!-- Semana 2 -->
+                <div class="calendar-day">
+                    <div class="day-number">2</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">3</div>
+                    <div class="event">9am (Sem título)</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">4</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">5</div>
+                    <div class="event">Contas mob</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">6</div>
+                    <div class="event">Solicitar Contas M</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">7</div>
+                    <div class="event">10:30am DSO/DDS</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">8</div>
+                </div>
+                
+                <!-- Semana 3 -->
+                <div class="calendar-day">
+                    <div class="day-number">9</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">10</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">11</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">12</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">13</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">14</div>
+                    <div class="event">9:30am DSO/DDS</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">15</div>
+                    <div class="event">Proclamação da Repu</div>
+                </div>
+                
+                <!-- Semana 4 -->
+                <div class="calendar-day">
+                    <div class="day-number">16</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">17</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">18</div>
+                    <div class="event">4 tarefas pendent</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">19</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">20</div>
+                    <div class="event">Dia da Consciência N</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">21</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">22</div>
+                </div>
+                
+                <!-- Semana 5 -->
+                <div class="calendar-day">
+                    <div class="day-number">23</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">24</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">25</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">26</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">27</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">28</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">29</div>
+                </div>
+                
+                <!-- Semana 6 -->
+                <div class="calendar-day">
+                    <div class="day-number">30</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">1</div>
+                    <div class="event">dez.</div>
+                    <div class="event">9am (Sem título)</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">2</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">3</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">4</div>
+                    <div class="event">Contas mob</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">5</div>
+                    <div class="event">Solicitar Contas M</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="day-number">6</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="task-list">
+            <h2>Tarefas</h2>
+            <div class="task-item">
+                <input type="checkbox" class="task-checkbox">
+                <div class="task-text">Aniversário de Isaú</div>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" class="task-checkbox">
+                <div class="task-text">Aniversário de Isaú</div>
+            </div>
+        </div>
+        
+        <a href="https://calendar.google.com/calendar/u0/r" class="google-link" target="_blank">Abrir no Google Calendar</a>
+    </div>
+
+    <script>
+        // Adiciona a classe "today" ao dia atual
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            if (today.getFullYear() === 2025 && today.getMonth() === 10) { // Novembro é mês 10 (0-indexed)
+                const dayElements = document.querySelectorAll('.day-number');
+                dayElements.forEach(day => {
+                    if (parseInt(day.textContent) === today.getDate()) {
+                        day.parentElement.classList.add('today');
+                    }
+                });
+            }
+            
+            // Navegação entre meses
+            const prevBtn = document.querySelector('.nav-btn:first-child');
+            const nextBtn = document.querySelector('.nav-btn:last-child');
+            const currentDateEl = document.querySelector('.current-date');
+            
+            let currentDate = new Date(2025, 10, 1); // Novembro 2025
+            
+            prevBtn.addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+            
+            function updateCalendar() {
+                const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                                    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                currentDateEl.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+                
+                // Aqui você implementaria a lógica para atualizar os dias do calendário
+                // baseado no mês e ano atual
+            }
+            
+            // Alternar entre visualizações
+            const viewOptions = document.querySelectorAll('.view-option');
+            viewOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    viewOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

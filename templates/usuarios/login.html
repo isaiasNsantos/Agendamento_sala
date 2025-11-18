@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Agendamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #e74c3c, #f39c12);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .company-name {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .login-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .login-body {
+            padding: 40px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-family: inherit;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-login:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .login-footer a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .login-footer a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .messages {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        
+        .messages li {
+            padding: 15px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .error {
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            color: #c33;
+            border-left-color: #e74c3c !important;
+        }
+        
+        .info {
+            background: linear-gradient(135deg, #e8f4fd 0%, #e1f0fa 100%);
+            color: #2c3e50;
+            border-left-color: #3498db !important;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #efe 0%, #dfd 100%);
+            color: #363;
+            border-left-color: #27ae60 !important;
+        }
+        
+        .brand-watermark {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .brand-watermark p {
+            margin-bottom: 5px;
+        }
+
+        .security-notice {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            border-left: 3px solid #3498db;
+        }
+
+        /* Ícones nos labels */
+        .icon-user::before {
+            content: "👤";
+        }
+
+        .icon-lock::before {
+            content: "🔒";
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .login-header {
+                padding: 30px 20px;
+            }
+            
+            .login-body {
+                padding: 30px 20px;
+            }
+            
+            .login-header h1 {
+                font-size: 24px;
+            }
+            
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .company-name {
+                align-items: center;
+            }
+        }
+
+        /* Efeito de foco suave */
+        .form-group input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Status de loading sutil */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        {% load static %}
+                        <img src="{% static 'images/logo.png' %}" alt="Raymundo da Fonte" onerror="this.style.display='none'">
+                    </div>
+                    <div class="company-name">
+                        <h1>Raymundo da Fonte</h1>
+                        <p>Sistema de Agendamento de Salas</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="login-body">
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">
+                                {% if message.tags == 'error' %}❌{% elif message.tags == 'success' %}✅{% else %}💡{% endif %}
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if next_url and next_url != 'pagina_inicial' %}
+                    <div class="info">
+                        💡 Você precisa fazer login para acessar esta página.
+                    </div>
+                {% endif %}
+
+                <form method="post" id="loginForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next_url }}">
+                    
+                    <div class="form-group">
+                        <label for="username" class="icon-user">Usuário</label>
+                        <input type="text" 
+                               name="username" 
+                               id="username" 
+                               required 
+                               autofocus 
+                               placeholder="Digite seu nome de usuário"
+                               autocomplete="username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="icon-lock">Senha</label>
+                        <input type="password" 
+                               name="password" 
+                               id="password" 
+                               required 
+                               placeholder="Digite sua senha"
+                               autocomplete="current-password">
+                    </div>
+                    
+                    <button type="submit" class="btn-login" id="btnLogin">
+                        🚀 Entrar no Sistema
+                    </button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Não tem uma conta? </p>
+                    <p style="margin-top: 8px; font-size: 13px; color: #7f8c8d;">
+                        Entre em contato com o departamento de TI
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="brand-watermark">
+            <p><strong>Transformando a excelência na gestão em vantagem competitiva</strong></p>
+           
+            <div class="security-notice">
+                ⚠️ Por segurança, sua sessão expirará após 5 minutos de inatividade
+                <p>Este programa foi desenvolvido por Isaias Nogueira. Versão atual: 1.0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de timeout de 5 minutos
+        let inactivityTime = function() {
+            let time;
+            const timeoutMinutes = 5; // 5 minutos
+            const timeoutMs = timeoutMinutes * 60 * 1000; // Converter para milissegundos
+            
+            function resetTimer() {
+                clearTimeout(time);
+                time = setTimeout(logout, timeoutMs);
+            }
+
+            function logout() {
+                // Verifica se já está na página de login
+                if (!window.location.pathname.includes('/login')) {
+                    // Redireciona para o logout ou login
+                    window.location.href = '/usuarios/logout/'; // Ou para a página de login
+                }
+            }
+
+            // Eventos que resetam o timer
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+            document.onclick = resetTimer;
+            document.onscroll = resetTimer;
+            document.onmousedown = resetTimer;
+            document.ontouchstart = resetTimer;
+
+            // Inicia o timer
+            resetTimer();
+        };
+
+        // Inicializa o sistema de timeout
+        inactivityTime();
+
+        // Melhoria de UX - foco automático e validação básica
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameField = document.getElementById('username');
+            const loginForm = document.getElementById('loginForm');
+            
+            // Foco automático no campo de usuário
+            if (usernameField) {
+                usernameField.focus();
+                
+                // Placeholder dinâmico
+                if (!usernameField.value) {
+                    usernameField.placeholder = 'ex: isaias.ns';
+                }
+            }
+
+            // Validação básica sem bloquear o envio
+            if (loginForm) {
+                loginForm.addEventListener('submit', function() {
+                    const btnLogin = document.getElementById('btnLogin');
+                    // Apenas muda o texto para feedback visual
+                    btnLogin.textContent = 'Entrando...';
+                    btnLogin.classList.add('loading');
+                });
+            }
+
+            // Tecla Enter para submeter o formulário
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const activeElement = document.activeElement;
+                    if (activeElement && (activeElement.type === 'text' || activeElement.type === 'password')) {
+                        // Deixa o formulário ser submetido normalmente
+                    }
+                }
+            });
+
+            // Fallback para carregamento da logo
+            setTimeout(function() {
+                const logoImg = document.querySelector('.logo-icon img');
+                if (logoImg && logoImg.naturalHeight === 0) {
+                    // Se a imagem não carregou, mostra um fallback
+                    logoImg.style.display = 'none';
+                    const logoIcon = document.querySelector('.logo-icon');
+                    logoIcon.innerHTML = '🏢';
+                    logoIcon.style.fontSize = '24px';
+                    logoIcon.style.display = 'flex';
+                    logoIcon.style.alignItems = 'center';
+                    logoIcon.style.justifyContent = 'center';
+                }
+            }, 1000);
+        });
+
+        // Fallback para garantir que o botão não fique travado
+        window.addEventListener('beforeunload', function() {
+            const btnLogin = document.getElementById('btnLogin');
+            if (btnLogin) {
+                btnLogin.classList.remove('loading');
+                btnLogin.textContent = '🚀 Entrar no Sistema';
+            }
+        });
+    </script>
+</body>
+</html>

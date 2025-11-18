@@ -1,0 +1,119 @@
+/* Cores personalizadas para o Admin Django - Raymundo da Fonte */
+
+/* Cores para salas especiais */
+.sala-minhoto {
+    background: linear-gradient(45deg, #FFEAA7, #FFD43B) !important;
+    border-left: 4px solid #FDCB6E !important;
+}
+
+.sala-sonho {
+    background: linear-gradient(45deg, #A29BFE, #6C5CE7) !important;
+    border-left: 4px solid #5C6BC0 !important;
+    color: white !important;
+}
+
+.sala-minhoto-sonho {
+    background: linear-gradient(45deg, #FF7675, #D63031) !important;
+    border-left: 4px solid #E17055 !important;
+    color: white !important;
+}
+
+/* Destaque para linhas da tabela */
+tr.sala-especial {
+    background: #FFF9E6 !important;
+}
+
+tr.sala-especial:hover {
+    background: #FFEAA7 !important;
+}
+
+/* Cores para status */
+.status-ativa {
+    color: #27ae60 !important;
+    font-weight: bold !important;
+}
+
+.status-inativa {
+    color: #e74c3c !important;
+    font-weight: bold !important;
+}
+
+/* Personalização do cabeçalho do admin */
+#header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+}
+
+#branding h1 {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+/* Melhorias na tabela */
+thead th {
+    background: #2c3e50 !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+.module h2, .module caption {
+    background: #34495e !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+/* Cores para ações */
+.viewlink {
+    background: #3498db !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+.changelink {
+    background: #f39c12 !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+.deletelink {
+    background: #e74c3c !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+/* Destaque para hoje */
+.agendamento-hoje {
+    background: #E8F6F3 !important;
+    border-left: 4px solid #1ABC9C !important;
+}
+
+.agendamento-futuro {
+    background: #EBF5FB !important;
+    border-left: 4px solid #3498DB !important;
+}
+
+.agendamento-passado {
+    background: #FDEDEC !important;
+    border-left: 4px solid #E74C3C !important;
+}
+
+/* Badges coloridas */
+.badge-especial {
+    background: linear-gradient(45deg, #FFD700, #FFA500) !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 12px !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+}
+
+.badge-comum {
+    background: #3498db !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 12px !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+}

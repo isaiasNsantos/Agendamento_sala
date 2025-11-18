@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Agendamentos</title>
+    <style>
+        @page {
+            size: landscape;
+            margin: 2cm;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .info-relatorio {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        
+        .info-relatorio .data {
+            float: right;
+            font-weight: bold;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #e8f4fd;
+            border-radius: 5px;
+            flex: 1;
+            margin: 0 5px;
+        }
+        
+        .stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #7f8c8d;
+        }
+        
+        .relatorio-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+            margin-top: 20px;
+        }
+        
+        .relatorio-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #34495e;
+        }
+        
+        .relatorio-table td {
+            padding: 6px 5px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .relatorio-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 10px;
+            color: #7f8c8d;
+        }
+        
+        .filtros-info {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .filtros-list {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+        }
+        
+        .filtros-list li {
+            display: inline-block;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 8px;
+            border: 1px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Relatório de Agendamentos - Raymundo da Fonte</h1>
+        <div class="subtitle">Sistema de Agendamento de Salas</div>
+    </div>
+    
+    <div class="info-relatorio">
+        <strong>Relatório gerado em:</strong> {{ data_geracao }}
+        <div class="data">Total de registros: {{ total_agendamentos }}</div>
+    </div>
+    
+    <!-- Informações dos Filtros Aplicados -->
+    {% if filtros_aplicados.data_inicio or filtros_aplicados.data_fim or filtros_aplicados.sala_id or filtros_aplicados.usuario_id %}
+    <div class="filtros-info">
+        <strong>Filtros Aplicados:</strong>
+        <ul class="filtros-list">
+            {% if filtros_aplicados.data_inicio %}
+            <li>Data Início: {{ filtros_aplicados.data_inicio }}</li>
+            {% endif %}
+            {% if filtros_aplicados.data_fim %}
+            <li>Data Fim: {{ filtros_aplicados.data_fim }}</li>
+            {% endif %}
+            {% if filtros_aplicados.sala_id %}
+            <li>Sala: {{ filtros_aplicados.sala_id }}</li>
+            {% endif %}
+            {% if filtros_aplicados.usuario_id %}
+            <li>Usuário: {{ filtros_aplicados.usuario_id }}</li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <!-- Estatísticas -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">{{ total_agendamentos }}</div>
+            <div class="stat-label">Total de Agendamentos</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ salas_utilizadas }}</div>
+            <div class="stat-label">Salas Utilizadas</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ agendamentos|length }}</div>
+            <div class="stat-label">Registros no Relatório</div>
+        </div>
+    </div>
+    
+    <!-- Tabela de Relatórios -->
+    <table class="relatorio-table">
+        <thead>
+            <tr>
+                <th width="12%">Sala</th>
+                <th width="12%">Usuário</th>
+                <th width="10%">Data Início</th>
+                <th width="10%">Data Fim</th>
+                <th width="12%">Horário</th>
+                <th width="8%">Duração</th>
+                <th width="26%">Descrição</th>
+                <th width="10%">Data Criação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agendamento in agendamentos %}
+            <tr>
+                <td><strong>{{ agendamento.sala.nome }}</strong></td>
+                <td>{{ agendamento.usuario.username }}</td>
+                <td>{{ agendamento.data_inicio|date:"d/m/Y" }}</td>
+                <td>{{ agendamento.data_fim|date:"d/m/Y" }}</td>
+                <td>{{ agendamento.hora_inicio|time:"H:i" }} - {{ agendamento.hora_fim|time:"H:i" }}</td>
+                <td style="text-align: center;">{{ agendamento.duracao_dias }} dia{{ agendamento.duracao_dias|pluralize }}</td>
+                <td>{{ agendamento.descricao|default:"-"|truncatewords:15 }}</td>
+                <td>{{ agendamento.data_criacao|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>Transformando a excelência na gestão em vantagem competitiva para sua empresa.</p>
+        <p>Sistema de Agendamento de Salas - Raymundo da Fonte</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário de Agendamentos - Sistema de Agendamento</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --light-gray: #f1f3f4;
+            --border-gray: #dadce0;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --today-color: #1a73e8;
+            
+            /* Cores das salas - mantendo as mesmas do sistema de salas */
+            --sala-minhoto: #e74c3c;
+            --sala-sonho: #9b59b6;
+            --sala-minhoto-sonho: #e67e22;
+            --sala-reuniao: #3498db;
+            --sala-treinamento: #2ecc71;
+            --sala-audio: #1abc9c;
+            --sala-video: #34495e;
+            --sala-presidencial: #d35400;
+            
+            /* Cores claras para fundo */
+            --sala-minhoto-light: #fdedec;
+            --sala-sonho-light: #f4ecf7;
+            --sala-minhoto-sonho-light: #fef9e7;
+            --sala-reuniao-light: #ebf5fb;
+            --sala-treinamento-light: #eafaf1;
+            --sala-audio-light: #e8f8f5;
+            --sala-video-light: #ebedef;
+            --sala-presidencial-light: #fbeee6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fff;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .header h1 {
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--text-dark);
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .current-date {
+            font-size: 18px;
+            font-weight: 500;
+            min-width: 180px;
+            text-align: center;
+        }
+        
+        .view-options {
+            display: flex;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .view-option {
+            padding: 8px 16px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .view-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .calendar-container {
+            background-color: white;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background-color: var(--light-gray);
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .day-header {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            min-height: 140px;
+            border-right: 1px solid var(--border-gray);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 8px;
+            position: relative;
+        }
+        
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+        
+        .day-number {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .today .day-number {
+            background-color: var(--today-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        /* Eventos com cores das salas */
+        .event {
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            overflow: hidden;
+            border-left: 3px solid;
+        }
+        
+        .event:hover {
+            filter: brightness(0.95);
+        }
+        
+        /* Classes específicas para cada tipo de sala */
+        .event-minhoto {
+            background-color: var(--sala-minhoto-light);
+            border-left-color: var(--sala-minhoto);
+            color: #333;
+        }
+        
+        .event-sonho {
+            background-color: var(--sala-sonho-light);
+            border-left-color: var(--sala-sonho);
+            color: #333;
+        }
+        
+        .event-minhoto-sonho {
+            background-color: var(--sala-minhoto-sonho-light);
+            border-left-color: var(--sala-minhoto-sonho);
+            color: #333;
+        }
+        
+        .event-reuniao {
+            background-color: var(--sala-reuniao-light);
+            border-left-color: var(--sala-reuniao);
+            color: #333;
+        }
+        
+        .event-treinamento {
+            background-color: var(--sala-treinamento-light);
+            border-left-color: var(--sala-treinamento);
+            color: #333;
+        }
+        
+        .event-audio {
+            background-color: var(--sala-audio-light);
+            border-left-color: var(--sala-audio);
+            color: #333;
+        }
+        
+        .event-video {
+            background-color: var(--sala-video-light);
+            border-left-color: var(--sala-video);
+            color: #333;
+        }
+        
+        .event-presidencial {
+            background-color: var(--sala-presidencial-light);
+            border-left-color: var(--sala-presidencial);
+            color: #333;
+        }
+        
+        .event-default {
+            background-color: #e6f4ea;
+            border-left-color: var(--primary-color);
+            color: #333;
+        }
+        
+        .other-month {
+            color: var(--text-light);
+            background-color: #f8f9fa;
+        }
+        
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        
+        .sala-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
+        
+        .event-time {
+            font-size: 10px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .event-user {
+            font-size: 10px;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+        
+        .event-description {
+            font-size: 11px;
+            color: #333;
+            line-height: 1.3;
+            overflow: hidden;
+            position: relative;
+            max-height: 2.6em; /* Aproximadamente 2 linhas */
+        }
+        
+        /* Solução alternativa para truncar texto em múltiplas linhas */
+        .event-description.truncate-2 {
+            max-height: 2.6em;
+        }
+        
+        .event-description.truncate-1 {
+            max-height: 1.3em;
+        }
+        
+        .empty-day {
+            color: #ccc;
+            font-style: italic;
+            font-size: 11px;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background: #0d62c9;
+        }
+        
+        /* Legenda de cores das salas */
+        .legenda-salas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .item-legenda {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+        
+        .cor-legenda {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border-left: 3px solid;
+        }
+        
+        /* Modal para detalhes do agendamento */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-details {
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            min-width: 100px;
+            color: var(--text-light);
+        }
+        
+        .detail-value {
+            flex: 1;
+            color: var(--text-dark);
+        }
+        
+        .description-box {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 100px;
+            }
+            
+            .event {
+                font-size: 10px;
+                padding: 4px 6px;
+            }
+            
+            .event-description {
+                max-height: 1.3em; /* Apenas uma linha em mobile */
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .legenda-salas {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Menu de Navegação Rápida -->
+        <div style="margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+            <a href="/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">🏠 Início</a>
+            <a href="/salas/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">🏢 Salas</a>
+            <a href="/novo-agendamento/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">📅 Novo Agendamento</a>
+            <a href="/agendamentos/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">📋 Lista</a>
+            <a href="/calendario/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color); font-weight: bold;">📅 Calendário</a>
+        </div>
+
+        <div class="header">
+            <h1>Calendário de Agendamentos</h1>
+            <div class="header-controls">
+                <div class="date-navigation">
+                    <a href="?mes={{ mes_anterior }}&ano={{ ano_anterior }}" class="nav-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </a>
+                    <div class="current-date">{{ mes_nome }} {{ ano }}</div>
+                    <a href="?mes={{ mes_proximo }}&ano={{ ano_proximo }}" class="nav-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="view-options">
+                    <button class="view-option active">Mês</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="quick-actions">
+            <a href="/novo-agendamento/" class="btn">
+                <span>+</span> Novo Agendamento
+            </a>
+            <a href="/agendamentos/" class="btn" style="background: #6c757d;">
+                📋 Ver Lista
+            </a>
+            <a href="/disponibilidade/" class="btn" style="background: #28a745;">
+                📊 Disponibilidade
+            </a>
+        </div>
+        
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="day-header">DOM</div>
+                <div class="day-header">SEG</div>
+                <div class="day-header">TER</div>
+                <div class="day-header">QUA</div>
+                <div class="day-header">QUI</div>
+                <div class="day-header">SEX</div>
+                <div class="day-header">SÁB</div>
+            </div>
+            
+            <div class="calendar-grid">
+                {% for dia in dias_calendario %}
+                <div class="calendar-day {% if not dia.eh_mes_atual %}other-month{% endif %} {% if dia.eh_hoje %}today{% endif %}">
+                    <div class="day-number">{{ dia.dia }}</div>
+                    
+                    {% if dia.agendamentos %}
+                        {% for agendamento in dia.agendamentos %}
+                        {% with sala_class=agendamento.sala.nome|lower|cut:" "|cut:"_" %}
+                        <div class="event {% if 'minhoto' in sala_class and 'sonho' in sala_class %}event-minhoto-sonho{% elif 'minhoto' in sala_class %}event-minhoto{% elif 'sonho' in sala_class %}event-sonho{% elif 'reuniao' in sala_class or 'meeting' in sala_class %}event-reuniao{% elif 'treinamento' in sala_class or 'training' in sala_class %}event-treinamento{% elif 'audio' in sala_class %}event-audio{% elif 'video' in sala_class %}event-video{% elif 'presidencial' in sala_class %}event-presidencial{% else %}event-default{% endif %}" 
+                             data-agendamento-id="{{ agendamento.id }}">
+                            <div class="event-header">
+                                <span class="sala-badge" style="background-color: var(--sala-color);">{{ agendamento.sala.nome }}</span>
+                                <span class="event-time">{{ agendamento.hora_inicio|time:'H:i' }}</span>
+                            </div>
+                            <div class="event-user">{{ agendamento.usuario.username }}</div>
+                            {% if agendamento.descricao %}
+                            <div class="event-description truncate-2">
+                                📝 {{ agendamento.descricao }}
+                            </div>
+                            {% else %}
+                            <div class="event-description" style="color: #999; font-style: italic;">
+                                Sem descrição
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                        {% endfor %}
+                    {% elif dia.eh_mes_atual %}
+                        <div class="empty-day">Sem agendamentos</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Legenda de Cores das Salas -->
+        <div class="legenda-salas">
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-minhoto-light); border-left-color: var(--sala-minhoto);"></div>
+                <span>Minhoto</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-sonho-light); border-left-color: var(--sala-sonho);"></div>
+                <span>Sonho</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-minhoto-sonho-light); border-left-color: var(--sala-minhoto-sonho);"></div>
+                <span>Minhoto_Sonho</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-reuniao-light); border-left-color: var(--sala-reuniao);"></div>
+                <span>Reunião</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-treinamento-light); border-left-color: var(--sala-treinamento);"></div>
+                <span>Treinamento</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-audio-light); border-left-color: var(--sala-audio);"></div>
+                <span>Áudio</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-video-light); border-left-color: var(--sala-video);"></div>
+                <span>Vídeo</span>
+            </div>
+            <div class="item-legenda">
+                <div class="cor-legenda" style="background-color: var(--sala-presidencial-light); border-left-color: var(--sala-presidencial);"></div>
+                <span>Presidencial</span>
+            </div>
+        </div>
+
+        <!-- Estatísticas Rápidas -->
+        <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div style="padding: 15px; background: #e8f5e9; border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: bold; color: #2e7d32;">
+                    {{ dias_calendario|length }}
+                </div>
+                <div style="font-size: 14px; color: #555;">Dias no calendário</div>
+            </div>
+            <div style="padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: bold; color: #1565c0;">
+                    {{ salas|length }}
+                </div>
+                <div style="font-size: 14px; color: #555;">Salas disponíveis</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalhes do agendamento -->
+    <div class="modal" id="agendamentoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalhes do Agendamento</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-details">
+                <div class="detail-item">
+                    <span class="detail-label">Sala:</span>
+                    <span class="detail-value" id="modal-sala"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Data:</span>
+                    <span class="detail-value" id="modal-data"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Horário:</span>
+                    <span class="detail-value" id="modal-horario"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Solicitante:</span>
+                    <span class="detail-value" id="modal-usuario"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Departamento:</span>
+                    <span class="detail-value" id="modal-departamento"></span>
+                </div>
+                <div class="description-box">
+                    <strong>📝 Descrição:</strong>
+                    <p id="modal-descricao"></p>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <button class="btn" id="btn-editar" style="background: #6c757d; margin-right: 10px;">Editar</button>
+                <button class="btn" id="btn-fechar">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navegação por teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    // Mês anterior
+                    window.location.href = '?mes={{ mes_anterior }}&ano={{ ano_anterior }}';
+                } else if (e.key === 'ArrowRight') {
+                    // Próximo mês
+                    window.location.href = '?mes={{ mes_proximo }}&ano={{ ano_proximo }}';
+                }
+            });
+
+            // Modal para detalhes do agendamento
+            const modal = document.getElementById('agendamentoModal');
+            const closeModal = document.querySelector('.close-modal');
+            const btnFechar = document.getElementById('btn-fechar');
+            const btnEditar = document.getElementById('btn-editar');
+            
+            // Clique nos eventos para mostrar detalhes
+            document.querySelectorAll('.event').forEach(event => {
+                event.addEventListener('click', function() {
+                    // Aqui você implementaria a lógica para buscar os dados completos do agendamento
+                    // Por enquanto, vamos usar dados de exemplo
+                    
+                    // Simulando dados do agendamento
+                    const salaNome = this.querySelector('.sala-badge').textContent;
+                    const horario = this.querySelector('.event-time').textContent;
+                    const usuario = this.querySelector('.event-user').textContent;
+                    const descricaoElement = this.querySelector('.event-description');
+                    const descricao = descricaoElement ? descricaoElement.textContent : 'Sem descrição';
+                    
+                    // Preenchendo o modal com os dados
+                    document.getElementById('modal-sala').textContent = salaNome;
+                    document.getElementById('modal-horario').textContent = horario;
+                    document.getElementById('modal-usuario').textContent = usuario;
+                    document.getElementById('modal-descricao').textContent = descricao.replace('📝 ', '');
+                    
+                    // Exemplo de dados adicionais
+                    document.getElementById('modal-data').textContent = '{{ dia.dia }} de {{ mes_nome }} de {{ ano }}';
+                    document.getElementById('modal-departamento').textContent = 'Departamento do ' + usuario;
+                    
+                    // Mostrar o modal
+                    modal.style.display = 'flex';
+                });
+            });
+            
+            // Fechar modal
+            function fecharModal() {
+                modal.style.display = 'none';
+            }
+            
+            closeModal.addEventListener('click', fecharModal);
+            btnFechar.addEventListener('click', fecharModal);
+            
+            // Fechar modal ao clicar fora
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    fecharModal();
+                }
+            });
+            
+            // Botão editar
+            btnEditar.addEventListener('click', function() {
+                // Aqui você implementaria a navegação para editar o agendamento
+                alert('Redirecionando para edição do agendamento...');
+                fecharModal();
+            });
+
+            // Atualizar título da página com o mês/ano atual
+            document.title = `Calendário - {{ mes_nome }} {{ ano }} - Sistema de Agendamento`;
+            
+            // Adicionar classes de truncagem para mobile
+            function adjustTextTruncation() {
+                const descriptions = document.querySelectorAll('.event-description');
+                if (window.innerWidth <= 768) {
+                    descriptions.forEach(desc => {
+                        desc.classList.remove('truncate-2');
+                        desc.classList.add('truncate-1');
+                    });
+                } else {
+                    descriptions.forEach(desc => {
+                        desc.classList.remove('truncate-1');
+                        desc.classList.add('truncate-2');
+                    });
+                }
+            }
+            
+            // Ajustar na carga inicial e quando a janela for redimensionada
+            adjustTextTruncation();
+            window.addEventListener('resize', adjustTextTruncation);
+        });
+    </script>
+</body>
+</html>

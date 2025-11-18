@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Sistema de Agendamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info .welcome {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .user-info .details {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 12px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-menu a:hover {
+            background: #f0f7ff;
+            color: #3498db;
+        }
+
+        .nav-menu a.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin: 20px;
+            margin-left: 0;
+        }
+
+        .content h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Estatísticas */
+        .stats-cards {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* Filtros */
+        .filtros-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+
+        .filtros-container h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filtros-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        input, select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        /* Tabela de Relatórios */
+        .relatorio-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .relatorio-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .relatorio-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            left: 0;
+            border: 1px solid #34495e;
+        }
+
+        .relatorio-table td {
+            padding: 12px 10px;
+            border: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        .relatorio-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .relatorio-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Informações de Filtros */
+        .filtros-info {
+            background: #e8f4fd;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .filtros-info h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .filtros-list {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filtros-list li {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            border: 1px solid #3498db;
+        }
+
+        /* Ações de Exportação */
+        .export-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* BOTÕES DE SELEÇÃO DE TIPO DE RELATÓRIO */
+        .tipo-relatorio-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            align-items: center;
+        }
+
+        .tipo-relatorio-buttons label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+
+        .btn-tipo-relatorio {
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-tipo-relatorio.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-tipo-relatorio:hover {
+            background: #2980b9;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* BOTÃO DE IMPRESSÃO ESPECÍFICO */
+        .btn-impressao {
+            background: #9b59b6 !important;
+            color: white !important;
+            border: none !important;
+        }
+        
+        .btn-impressao:hover {
+            background: #8e44ad !important;
+            transform: translateY(-1px);
+        }
+
+        /* ESTILO PARA GRUPOS DE SEMANA */
+        .semana-group {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .semana-header {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .semana-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .semana-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        .semana-table td {
+            padding: 6px 5px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .semana-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        /* ESTILOS PARA GRUPOS MENSAS */
+        .mes-group {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .mes-header {
+            background: #e67e22;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .mes-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .mes-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        .mes-table td {
+            padding: 6px 5px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .mes-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        /* OCULTAR SEÇÕES DINAMICAMENTE */
+        .relatorio-semanal { display: block; }
+        .relatorio-mensal { display: none; }
+
+        .tipo-mensal .relatorio-semanal { display: none; }
+        .tipo-mensal .relatorio-mensal { display: block; }
+
+        /* CSS ESPECÍFICO PARA IMPRESSÃO SIMPLIFICADA - CORRIGIDO */
+        @media print {
+            @page {
+                size: landscape;
+                margin: 0.5cm;
+            }
+            
+            body {
+                font-size: 10px;
+                line-height: 1.1;
+                background: white !important;
+                color: black !important;
+                margin: 0;
+                padding: 0;
+            }
+            
+            /* OCULTAR ABSOLUTAMENTE TUDO EXCETO O ESSENCIAL */
+            .sidebar, 
+            .btn-group, 
+            .filtros-container, 
+            .export-actions,
+            .stats-cards,
+            .filtros-info,
+            .footer,
+            .content h2,
+            .nav-menu,
+            .user-info,
+            .main-container,
+            .empty-state,
+            .tipo-relatorio-buttons {
+                display: none !important;
+            }
+            
+            /* MOSTRAR APENAS O TÍTULO E OS AGENDAMENTOS */
+            .header {
+                background: white !important;
+                color: black !important;
+                padding: 5px 0 !important;
+                box-shadow: none !important;
+                text-align: center;
+                border-bottom: 2px solid #000;
+                margin-bottom: 10px;
+                display: block !important;
+            }
+            
+            .header-content {
+                justify-content: center !important;
+                display: block !important;
+            }
+            
+            .logo h1 {
+                font-size: 16px !important;
+                color: black !important;
+                margin-bottom: 2px;
+                font-weight: bold;
+            }
+            
+            .logo p {
+                font-size: 10px !important;
+                color: black !important;
+                opacity: 1 !important;
+                margin: 0;
+            }
+            
+            .content {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                background: white !important;
+                width: 100% !important;
+                display: block !important;
+            }
+            
+            /* MOSTRAR APENAS O RELATÓRIO SELECIONADO */
+            .relatorio-container {
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+            }
+            
+            /* MOSTRAR APENAS O TIPO SELECIONADO */
+            .relatorio-semanal {
+                display: block !important;
+            }
+            
+            .relatorio-mensal {
+                display: none !important;
+            }
+            
+            .tipo-mensal .relatorio-semanal {
+                display: none !important;
+            }
+            
+            .tipo-mensal .relatorio-mensal {
+                display: block !important;
+            }
+            
+            /* ESTILO PARA GRUPOS DE SEMANA NA IMPRESSÃO */
+            .semana-group {
+                page-break-inside: avoid;
+                margin-bottom: 10px;
+                border: 1px solid #000;
+                padding: 5px;
+                background: white !important;
+                display: block !important;
+            }
+            
+            .semana-header {
+                background: #f0f0f0 !important;
+                color: black !important;
+                padding: 4px 6px;
+                font-weight: bold;
+                margin-bottom: 3px;
+                border-bottom: 1px solid #000;
+                font-size: 9px;
+                display: block !important;
+            }
+            
+            .semana-table {
+                width: 100%;
+                font-size: 8px;
+                border-collapse: collapse;
+                display: table !important;
+            }
+            
+            .semana-table th {
+                background: #e0e0e0 !important;
+                color: black !important;
+                padding: 3px 2px;
+                border: 1px solid #000;
+                font-weight: bold;
+            }
+            
+            .semana-table td {
+                padding: 2px 1px;
+                border: 1px solid #ccc;
+            }
+            
+            .semana-table tr:nth-child(even) {
+                background: #f9f9f9 !important;
+            }
+
+            /* ESTILO PARA GRUPOS MENSAS NA IMPRESSÃO */
+            .mes-group {
+                page-break-inside: avoid;
+                margin-bottom: 10px;
+                border: 1px solid #000;
+                padding: 5px;
+                background: white !important;
+                display: block !important;
+            }
+            
+            .mes-header {
+                background: #f0f0f0 !important;
+                color: black !important;
+                padding: 4px 6px;
+                font-weight: bold;
+                margin-bottom: 3px;
+                border-bottom: 1px solid #000;
+                font-size: 9px;
+                display: block !important;
+            }
+            
+            .mes-table {
+                width: 100%;
+                font-size: 8px;
+                border-collapse: collapse;
+                display: table !important;
+            }
+            
+            .mes-table th {
+                background: #e0e0e0 !important;
+                color: black !important;
+                padding: 3px 2px;
+                border: 1px solid #000;
+                font-weight: bold;
+            }
+            
+            .mes-table td {
+                padding: 2px 1px;
+                border: 1px solid #ccc;
+            }
+            
+            .mes-table tr:nth-child(even) {
+                background: #f9f9f9 !important;
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: calc(100% - 40px);
+                margin: 20px;
+            }
+            
+            .content {
+                margin: 20px;
+                margin-top: 0;
+            }
+            
+            .stats-cards {
+                flex-direction: column;
+            }
+            
+            .filtros-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .export-actions {
+                flex-direction: column;
+            }
+
+            .tipo-relatorio-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Raymundo da Fonte</h1>
+                <p>Sistema de Agendamento de Salas</p>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="user-info">
+                <div class="welcome">Bem-vindo, {{ user.username }}</div>
+                <div class="details">{{ user.matricula }} | {{ user.departamento }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <div class="sidebar">
+            <h3>Menu Principal</h3>
+            <ul class="nav-menu">
+                <li><a href="/">🏠 Início</a></li>
+                <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
+                <li><a href="/agendamentos/">📋 Agendamentos</a></li>
+                <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
+                <li><a href="/calendario/">📅 Calendário</a></li>
+                <li><a href="/relatorios/" class="active">📈 Relatórios</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="/admin/">⚙️ Administração</a></li>
+                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+                {% else %}
+                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="content">
+            <h2>
+                📈 Relatórios de Agendamentos
+                <span style="font-size: 16px; color: #7f8c8d; font-weight: normal;">
+                    Sistema de relatórios completo
+                </span>
+            </h2>
+
+            <!-- Estatísticas -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_agendamentos }}</div>
+                    <div class="stat-label">Total de Agendamentos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ salas_utilizadas }}</div>
+                    <div class="stat-label">Salas Utilizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ usuarios_ativos }}</div>
+                    <div class="stat-label">Usuários Ativos</div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filtros-container">
+                <h3>🔍 Filtros do Relatório</h3>
+                <form method="get" class="filtros-form" id="filtros-form">
+                    <div class="form-group">
+                        <label for="data_inicio">Data Início</label>
+                        <input type="date" id="data_inicio" name="data_inicio" value="{{ filtros_aplicados.data_inicio }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_fim">Data Fim</label>
+                        <input type="date" id="data_fim" name="data_fim" value="{{ filtros_aplicados.data_fim }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sala">Sala</label>
+                        <select id="sala" name="sala">
+                            <option value="">Todas as Salas</option>
+                            {% for sala in salas %}
+                            <option value="{{ sala.id }}" {% if filtros_aplicados.sala_id == sala.id|stringformat:"s" %}selected{% endif %}>
+                                {{ sala.nome }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="usuario">Usuário</label>
+                        <select id="usuario" name="usuario">
+                            <option value="">Todos os Usuários</option>
+                            {% for usuario in usuarios %}
+                            <option value="{{ usuario.id }}" {% if filtros_aplicados.usuario_id == usuario.id|stringformat:"s" %}selected{% endif %}>
+                                {{ usuario.username }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+
+                <div class="btn-group">
+                    <button type="submit" form="filtros-form" class="btn btn-primary">
+                        <span style="font-size: 16px;">🔍</span>
+                        Aplicar Filtros
+                    </button>
+                    <a href="/relatorios/" class="btn btn-secondary">
+                        <span style="font-size: 16px;">🔄</span>
+                        Limpar Filtros
+                    </a>
+                </div>
+            </div>
+
+            <!-- Informações dos Filtros Aplicados -->
+            {% if filtros_aplicados.data_inicio or filtros_aplicados.data_fim or filtros_aplicados.sala_id or filtros_aplicados.usuario_id %}
+            <div class="filtros-info">
+                <h4>📋 Filtros Ativos:</h4>
+                <ul class="filtros-list">
+                    {% if filtros_aplicados.data_inicio %}
+                    <li>Data Início: {{ filtros_aplicados.data_inicio }}</li>
+                    {% endif %}
+                    {% if filtros_aplicados.data_fim %}
+                    <li>Data Fim: {{ filtros_aplicados.data_fim }}</li>
+                    {% endif %}
+                    {% if filtros_aplicados.sala_id %}
+                    <li>Sala: {% for sala in salas %}{% if sala.id == filtros_aplicados.sala_id|add:0 %}{{ sala.nome }}{% endif %}{% endfor %}</li>
+                    {% endif %}
+                    {% if filtros_aplicados.usuario_id %}
+                    <li>Usuário: {% for usuario in usuarios %}{% if usuario.id == filtros_aplicados.usuario_id|add:0 %}{{ usuario.username }}{% endif %}{% endfor %}</li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Ações de Exportação -->
+            <div class="export-actions">
+                <!-- Botões de seleção do tipo de relatório -->
+                <div class="tipo-relatorio-buttons">
+                    <label>📊 Tipo de Relatório:</label>
+                    <button type="button" class="btn-tipo-relatorio active" onclick="selecionarTipoRelatorio('semanal')">
+                        📅 Semanal
+                    </button>
+                    <button type="button" class="btn-tipo-relatorio" onclick="selecionarTipoRelatorio('mensal')">
+                        📆 Mensal
+                    </button>
+                </div>
+
+                <a href="{% url 'exportar_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-warning" target="_blank">
+                    <span style="font-size: 16px;">📄</span>
+                    Exportar PDF
+                </a>
+                <a href="{% url 'exportar_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success">
+                    <span style="font-size: 16px;">📊</span>
+                    Exportar Excel
+                </a>
+                <button type="button" class="btn btn-impressao" onclick="imprimirRelatorio()">
+                    <span style="font-size: 16px;">🖨️</span>
+                    Imprimir Relatório
+                </button>
+            </div>
+
+            <!-- SEÇÃO DE AGENDAMENTOS COM DUAS VISUALIZAÇÕES -->
+            <div class="relatorio-container">
+                {% if agendamentos %}
+                    <!-- RELATÓRIO SEMANAL -->
+                    <div class="relatorio-semanal">
+                        {% with agendamentos_ordenados=agendamentos|dictsortreversed:"data_inicio" %}
+                            {% for agendamento in agendamentos_ordenados %}
+                                <!-- Iniciar novo grupo de semana quando mudar a semana -->
+                                {% ifchanged agendamento.data_inicio|date:"Y-W" %}
+                                    {% if not forloop.first %}
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                    {% endif %}
+                                    <div class="semana-group">
+                                        <div class="semana-header">
+                                            📅 Semana {{ agendamento.data_inicio|date:"W" }} - 
+                                            {{ agendamento.data_inicio|date:"d/m/Y" }}
+                                            ({{ agendamentos_ordenados|length }} agendamento{{ agendamentos_ordenados|length|pluralize }})
+                                        </div>
+                                        <table class="semana-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Sala</th>
+                                                    <th width="15%">Usuário</th>
+                                                    <th width="12%">Data Início</th>
+                                                    <th width="12%">Data Fim</th>
+                                                    <th width="15%">Horário</th>
+                                                    <th width="8%">Duração</th>
+                                                    <th width="20%">Descrição</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                {% endifchanged %}
+                                
+                                <tr>
+                                    <td><strong>{{ agendamento.sala.nome }}</strong></td>
+                                    <td>{{ agendamento.usuario.username }}</td>
+                                    <td>{{ agendamento.data_inicio|date:"d/m/Y" }}</td>
+                                    <td>{{ agendamento.data_fim|date:"d/m/Y" }}</td>
+                                    <td>{{ agendamento.hora_inicio|time:"H:i" }} - {{ agendamento.hora_fim|time:"H:i" }}</td>
+                                    <td style="text-align: center;">{{ agendamento.duracao_dias }} dia{{ agendamento.duracao_dias|pluralize }}</td>
+                                    <td>{{ agendamento.descricao|default:"-" }}</td>
+                                </tr>
+                                
+                                <!-- Fechar o último grupo -->
+                                {% if forloop.last %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+
+                    <!-- RELATÓRIO MENSAL -->
+                    <div class="relatorio-mensal">
+                        {% with agendamentos_ordenados_mes=agendamentos|dictsortreversed:"data_inicio" %}
+                            {% for agendamento in agendamentos_ordenados_mes %}
+                                <!-- Iniciar novo grupo de mês quando mudar o mês -->
+                                {% ifchanged agendamento.data_inicio|date:"Y-m" %}
+                                    {% if not forloop.first %}
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                    {% endif %}
+                                    <div class="mes-group">
+                                        <div class="mes-header">
+                                            📆 {{ agendamento.data_inicio|date:"F/Y" }} - 
+                                            Mês Completo
+                                            ({{ agendamentos_ordenados_mes|length }} agendamento{{ agendamentos_ordenados_mes|length|pluralize }})
+                                        </div>
+                                        <table class="mes-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Sala</th>
+                                                    <th width="15%">Usuário</th>
+                                                    <th width="12%">Data Início</th>
+                                                    <th width="12%">Data Fim</th>
+                                                    <th width="15%">Horário</th>
+                                                    <th width="8%">Duração</th>
+                                                    <th width="20%">Descrição</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                {% endifchanged %}
+                                
+                                <tr>
+                                    <td><strong>{{ agendamento.sala.nome }}</strong></td>
+                                    <td>{{ agendamento.usuario.username }}</td>
+                                    <td>{{ agendamento.data_inicio|date:"d/m/Y" }}</td>
+                                    <td>{{ agendamento.data_fim|date:"d/m/Y" }}</td>
+                                    <td>{{ agendamento.hora_inicio|time:"H:i" }} - {{ agendamento.hora_fim|time:"H:i" }}</td>
+                                    <td style="text-align: center;">{{ agendamento.duracao_dias }} dia{{ agendamento.duracao_dias|pluralize }}</td>
+                                    <td>{{ agendamento.descricao|default:"-" }}</td>
+                                </tr>
+                                
+                                <!-- Fechar o último grupo -->
+                                {% if forloop.last %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                    
+                {% else %}
+                <div class="empty-state">
+                    <h3>Nenhum agendamento encontrado</h3>
+                    <p>Não há agendamentos que correspondam aos filtros aplicados.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Transformando a excelência na gestão em vantagem competitiva para sua empresa.</p>
+        <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte</p>
+    </div>
+
+    <script>
+        let tipoRelatorioSelecionado = 'semanal';
+
+        function selecionarTipoRelatorio(tipo) {
+            tipoRelatorioSelecionado = tipo;
+            
+            // Atualizar botões
+            document.querySelectorAll('.btn-tipo-relatorio').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Atualizar visualização
+            if (tipo === 'mensal') {
+                document.body.classList.add('tipo-mensal');
+            } else {
+                document.body.classList.remove('tipo-mensal');
+            }
+        }
+
+        function imprimirRelatorio() {
+            // Forçar o tipo selecionado para impressão
+            if (tipoRelatorioSelecionado === 'mensal') {
+                document.body.classList.add('tipo-mensal');
+            } else {
+                document.body.classList.remove('tipo-mensal');
+            }
+            
+            // Aguardar um frame para o CSS ser aplicado
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formatar formulário para submit
+            const form = document.querySelector('form');
+            form.id = 'filtros-form';
+            
+            // Validação de datas
+            const dataInicio = document.getElementById('data_inicio');
+            const dataFim = document.getElementById('data_fim');
+            
+            if (dataInicio && dataFim) {
+                dataInicio.addEventListener('change', function() {
+                    if (dataFim.value && dataFim.value < this.value) {
+                        alert('A data final não pode ser anterior à data inicial!');
+                        this.value = '';
+                    }
+                });
+                
+                dataFim.addEventListener('change', function() {
+                    if (dataInicio.value && this.value < dataInicio.value) {
+                        alert('A data final não pode ser anterior à data inicial!');
+                        this.value = '';
+                    }
+                });
+            }
+
+            // Inicializar com relatório semanal
+            selecionarTipoRelatorio('semanal');
+        });
+    </script>
+</body>
+</html>

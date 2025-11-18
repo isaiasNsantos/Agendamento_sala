@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salas Disponíveis - Sistema de Agendamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info .welcome {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .user-info .details {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 12px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-menu a:hover {
+            background: #f0f7ff;
+            color: #3498db;
+        }
+
+        .nav-menu a.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin: 20px;
+            margin-left: 0;
+        }
+
+        .content h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Estatísticas */
+        .stats-cards {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* Grid de Salas */
+        .salas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .sala-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sala-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--sala-color, #3498db);
+        }
+
+        .sala-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Cores específicas para tipos de sala */
+        .sala-minhoto {
+            --sala-color: #e74c3c;
+            --sala-light: #fdedec;
+        }
+
+        .sala-sonho {
+            --sala-color: #9b59b6;
+            --sala-light: #f4ecf7;
+        }
+
+        .sala-minhoto-sonho {
+            --sala-color: #e67e22;
+            --sala-light: #fef9e7;
+        }
+
+        .sala-reuniao {
+            --sala-color: #3498db;
+            --sala-light: #ebf5fb;
+        }
+
+        .sala-treinamento {
+            --sala-color: #2ecc71;
+            --sala-light: #eafaf1;
+        }
+
+        .sala-audio {
+            --sala-color: #1abc9c;
+            --sala-light: #e8f8f5;
+        }
+
+        .sala-video {
+            --sala-color: #34495e;
+            --sala-light: #ebedef;
+        }
+
+        .sala-presidencial {
+            --sala-color: #d35400;
+            --sala-light: #fbeee6;
+        }
+
+        .sala-card:hover {
+            background: var(--sala-light, #f8f9fa);
+        }
+
+        .sala-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .sala-nome {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sala-badge {
+            background: var(--sala-color, #3498db);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sala-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-ativa {
+            background: #e8f5e9;
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+        }
+
+        .status-inativa {
+            background: #ffebee;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .sala-info {
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 80px;
+        }
+
+        .info-value {
+            color: #555;
+        }
+
+        .info-sala {
+            background: var(--sala-light, #e8f4fd);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            border-left: 3px solid var(--sala-color, #3498db);
+        }
+
+        .sala-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--sala-color, #3498db);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--sala-color, #3498db);
+            filter: brightness(0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Filtros */
+        .filtros {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .filtro-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filtro-item label {
+            font-size: 14px;
+            color: #2c3e50;
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Paginação */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin: 0 15px;
+        }
+
+        /* Ícones e elementos visuais */
+        .sala-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--sala-color, #3498db);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .especial-badge {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #c0392b;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        /* Legenda de Cores */
+        .legenda-cores {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .item-legenda {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+
+        .cor-legenda {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .salas-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: calc(100% - 40px);
+                margin: 20px;
+            }
+            
+            .content {
+                margin: 20px;
+                margin-top: 0;
+            }
+            
+            .stats-cards {
+                flex-direction: column;
+            }
+            
+            .filtros {
+                flex-direction: column;
+            }
+            
+            .salas-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sala-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .sala-actions {
+                flex-direction: column;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+
+            .legenda-cores {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Raymundo da Fonte</h1>
+                <p>Sistema de Agendamento de Salas</p>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="user-info">
+                <div class="welcome">Bem-vindo, {{ user.username }}</div>
+                <div class="details">{{ user.matricula }} | {{ user.departamento }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <div class="sidebar">
+            <h3>Menu Principal</h3>
+            <ul class="nav-menu">
+                <li><a href="/">🏠 Início</a></li>
+                <li><a href="/salas/" class="active">🏢 Salas Disponíveis</a></li>
+                <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
+                <li><a href="/agendamentos/">📋 Agendamentos</a></li>
+                <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
+                <li><a href="/calendario/">📅 Calendário</a></li>
+                <li><a href="/relatorios/">📈 Relatórios</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="/admin/">⚙️ Administração</a></li>
+                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+                {% else %}
+                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="content">
+            <h2>
+                Salas Disponíveis
+                <span style="font-size: 16px; color: #7f8c8d; font-weight: normal;">
+                    {{ salas.paginator.count }} sala{{ salas.paginator.count|pluralize }} disponível{{ salas.paginator.count|pluralize }}
+                </span>
+            </h2>
+
+            <!-- Estatísticas -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">{{ salas.paginator.count }}</div>
+                    <div class="stat-label">Total de Salas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ salas_ativas.count }}</div>
+                    <div class="stat-label">Salas Ativas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ salas_especiais.count }}</div>
+                    <div class="stat-label">Salas Especiais</div>
+                </div>
+            </div>
+
+            <!-- Legenda de Cores -->
+            <div class="legenda-cores">
+                <div class="item-legenda">
+                    <div class="cor-legenda" style="background: #e74c3c;"></div>
+                    <span>Minhoto</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda" style="background: #9b59b6;"></div>
+                    <span>Sonho</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda" style="background: #e67e22;"></div>
+                    <span>Minhoto_Sonho</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda" style="background: #3498db;"></div>
+                    <span>Reunião</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda" style="background: #2ecc71;"></div>
+                    <span>Treinamento</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda" style="background: #1abc9c;"></div>
+                    <span>Áudio</span>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filtros">
+                <div class="filtro-item">
+                    <label for="filtro-status">Filtrar por Status:</label>
+                    <select id="filtro-status">
+                        <option value="todas">Todas as Salas</option>
+                        <option value="ativas">Salas Ativas</option>
+                        <option value="inativas">Salas Inativas</option>
+                    </select>
+                </div>
+                <div class="filtro-item">
+                    <label for="filtro-tipo">Filtrar por Tipo:</label>
+                    <select id="filtro-tipo">
+                        <option value="todas">Todas</option>
+                        <option value="comuns">Salas Comuns</option>
+                        <option value="especiais">Salas Especiais</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grid de Salas -->
+            <div class="salas-grid">
+                {% for sala in salas %}
+                {% with sala_class=sala.nome|lower|cut:" "|cut:"_" %}
+                <div class="sala-card {% if 'minhoto' in sala_class and 'sonho' in sala_class %}sala-minhoto-sonho{% elif 'minhoto' in sala_class %}sala-minhoto{% elif 'sonho' in sala_class %}sala-sonho{% elif 'reuniao' in sala_class or 'meeting' in sala_class %}sala-reuniao{% elif 'treinamento' in sala_class or 'training' in sala_class %}sala-treinamento{% elif 'audio' in sala_class %}sala-audio{% elif 'video' in sala_class %}sala-video{% elif 'presidencial' in sala_class %}sala-presidencial{% else %}sala-reuniao{% endif %}" 
+                     data-status="{% if sala.ativa %}ativa{% else %}inativa{% endif %}" 
+                     data-tipo="{% if sala.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}especial{% else %}comum{% endif %}">
+                    
+                    <div class="sala-header">
+                        <div class="sala-nome">
+                            <div class="sala-icon">{{ sala.nome|slice:":1" }}</div>
+                            {{ sala.nome }}
+                            {% if sala.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}
+                            <span class="especial-badge">⭐ VIP</span>
+                            {% endif %}
+                        </div>
+                        <div class="sala-status {% if sala.ativa %}status-ativa{% else %}status-inativa{% endif %}">
+                            {% if sala.ativa %}
+                                ● Ativa
+                            {% else %}
+                                ● Inativa
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="sala-info">
+                        <div class="info-item">
+                            <span class="info-label">Capacidade:</span>
+                            <span class="info-value">{{ sala.capacidade }} pessoas</span>
+                        </div>
+                        {% if sala.descricao %}
+                        <div class="info-item">
+                            <span class="info-label">Descrição:</span>
+                            <span class="info-value">{{ sala.descricao }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if sala.nome == 'Minhoto_Sonho' %}
+                    <div class="info-sala">
+                        <strong>⚠️ Atenção:</strong> Esta sala bloqueia o agendamento das salas Minhoto e Sonho quando reservada.
+                    </div>
+                    {% elif sala.nome in 'Minhoto,Sonho' %}
+                    <div class="info-sala">
+                        <strong>ℹ️ Informação:</strong> Não pode ser agendada quando a sala Minhoto_Sonho estiver reservada no mesmo horário.
+                    </div>
+                    {% endif %}
+
+                    <div class="sala-actions">
+                        {% if user.is_authenticated and sala.ativa %}
+                        <a href="/novo-agendamento/{{ sala.id }}/" class="btn btn-primary">
+                            <span style="font-size: 16px;">📅</span>
+                            Agendar Esta Sala
+                        </a>
+                        {% elif not sala.ativa %}
+                        <button class="btn btn-secondary" disabled>
+                            <span style="font-size: 16px;">🔒</span>
+                            Sala Indisponível
+                        </button>
+                        {% else %}
+                        <a href="/usuarios/login/" class="btn btn-primary">
+                            <span style="font-size: 16px;">🔑</span>
+                            Fazer Login para Agendar
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endwith %}
+                {% empty %}
+                <div class="empty-state">
+                    <h3>Nenhuma sala disponível</h3>
+                    <p>Não há salas cadastradas no momento.</p>
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a href="/admin/agendamento/sala/add/" class="btn btn-primary">
+                        <span style="font-size: 16px;">➕</span>
+                        Adicionar Nova Sala
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Paginação -->
+            {% if salas.paginator.num_pages > 1 %}
+            <div class="pagination">
+                {% if salas.has_previous %}
+                    <a href="?page=1" class="btn" style="background: #3498db; color: white; padding: 8px 12px; text-decoration: none;">« Primeira</a>
+                    <a href="?page={{ salas.previous_page_number }}" class="btn" style="background: #3498db; color: white; padding: 8px 12px; text-decoration: none;">‹ Anterior</a>
+                {% endif %}
+                
+                <span class="pagination-info">
+                    Página {{ salas.number }} de {{ salas.paginator.num_pages }}
+                </span>
+                
+                {% if salas.has_next %}
+                    <a href="?page={{ salas.next_page_number }}" class="btn" style="background: #3498db; color: white; padding: 8px 12px; text-decoration: none;">Próxima ›</a>
+                    <a href="?page={{ salas.paginator.num_pages }}" class="btn" style="background: #3498db; color: white; padding: 8px 12px; text-decoration: none;">Última »</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Transformando a excelência na gestão em vantagem competitiva para sua empresa.</p>
+        <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroStatus = document.getElementById('filtro-status');
+            const filtroTipo = document.getElementById('filtro-tipo');
+            const salas = document.querySelectorAll('.sala-card');
+            
+            function filtrarSalas() {
+                const statusSelecionado = filtroStatus.value;
+                const tipoSelecionado = filtroTipo.value;
+                
+                salas.forEach(sala => {
+                    const statusSala = sala.getAttribute('data-status');
+                    const tipoSala = sala.getAttribute('data-tipo');
+                    
+                    let mostrar = true;
+                    
+                    // Filtrar por status
+                    if (statusSelecionado !== 'todas' && statusSelecionado !== statusSala) {
+                        mostrar = false;
+                    }
+                    
+                    // Filtrar por tipo
+                    if (tipoSelecionado !== 'todas' && tipoSelecionado !== tipoSala) {
+                        mostrar = false;
+                    }
+                    
+                    // Mostrar ou esconder sala
+                    sala.style.display = mostrar ? 'block' : 'none';
+                });
+            }
+            
+            filtroStatus.addEventListener('change', filtrarSalas);
+            filtroTipo.addEventListener('change', filtrarSalas);
+
+            // Efeito de hover suave
+            salas.forEach(sala => {
+                sala.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                sala.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
