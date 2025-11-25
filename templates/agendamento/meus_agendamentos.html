@@ -364,7 +364,7 @@
             border-top: 1px solid #eee;
         }
 
-        /* Filtros */
+        /* Filtros - LAYOUT ORIGINAL */
         .filtros {
             display: flex;
             gap: 15px;
@@ -500,17 +500,22 @@
             <h3>Menu Principal</h3>
             <ul class="nav-menu">
                 <li><a href="/">🏠 Início</a></li>
-                <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                {% endif %}
                 <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
-                <li><a href="/agendamentos/" class="active">📋 Agendamentos</a></li>
-                <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
+                <li><a href="/meus-agendamentos/" class="active">📋 Agendamentos</a></li>
                 <li><a href="/calendario/">📅 Calendário</a></li>
-                <li><a href="/relatorios/">📈 Relatórios</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/agendamentos/">📋 Todos Agendamentos</a></li>
+                    <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
+                    <li><a href="/relatorios/">📈 Relatórios</a></li>
+                    <li><a href="/admin/">⚙️ Administração</a></li>
+                {% endif %}
                 {% if user.is_authenticated %}
-                <li><a href="/admin/">⚙️ Administração</a></li>
-                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+                    <li><a href="/usuarios/logout/">🚪 Sair</a></li>
                 {% else %}
-                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+                    <li><a href="/usuarios/login/">🔑 Entrar</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -544,7 +549,7 @@
                 </div>
             </div>
 
-            <!-- Filtros -->
+            <!-- Filtros - LAYOUT ORIGINAL -->
             <div class="filtros">
                 <div class="filtro-item">
                     <label for="filtro-sala">Sala:</label>
@@ -559,9 +564,9 @@
                     <label for="filtro-status">Status:</label>
                     <select id="filtro-status">
                         <option value="todos">Todos</option>
-                        <option value="ativos">Ativos</option>
-                        <option value="futuros">Futuros</option>
-                        <option value="passados">Passados</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="futuro">Futuros</option>
+                        <option value="passado">Passados</option>
                     </select>
                 </div>
                 <div class="filtro-item">
@@ -580,7 +585,7 @@
                 <div class="agendamento-item {% if agendamento.data_inicio <= hoje and agendamento.data_fim >= hoje %}destaque-hoje{% elif agendamento.data_inicio > hoje %}destaque-proximo{% endif %}" 
                     data-sala="{{ agendamento.sala.id }}" 
                     data-status="{% if agendamento.data_fim < hoje %}passado{% elif agendamento.data_inicio > hoje %}futuro{% else %}ativo{% endif %}"
-                    data-data="{{ agendamento.data_inicio.isoformat }}">
+                    data-data="{{ agendamento.data_inicio|date:'Y-m-d' }}">
                     
                     <!-- Informações da Sala -->
                     <div class="sala-info">
@@ -694,6 +699,8 @@
                 const statusSelecionado = filtroStatus.value;
                 const dataSelecionada = filtroData.value;
                 
+                let agendamentosVisiveis = 0;
+                
                 itens.forEach(item => {
                     const salaId = item.getAttribute('data-sala');
                     const status = item.getAttribute('data-status');
@@ -713,20 +720,58 @@
                     
                     // Filtrar por data
                     if (dataSelecionada) {
-                        const dataInicio = new Date(dataAgendamento);
-                        const dataFimTexto = item.querySelector('.periodo-info .data-item:nth-child(2) .data-value').textContent;
-                        const [diaFim, mesFim, anoFim] = dataFimTexto.split('/');
-                        const dataFim = new Date(anoFim, mesFim - 1, diaFim);
-                        const dataFiltro = new Date(dataSelecionada);
+                        // Converter data do agendamento para objeto Date
+                        const [ano, mes, dia] = dataAgendamento.split('-');
+                        const dataInicio = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
                         
-                        if (dataFiltro < dataInicio || dataFiltro > dataFim) {
-                            mostrar = false;
+                        // Obter data fim do agendamento
+                        const dataFimElemento = item.querySelector('.periodo-info .data-item:nth-child(2) .data-value');
+                        if (dataFimElemento) {
+                            const dataFimTexto = dataFimElemento.textContent.trim();
+                            const [diaFim, mesFim, anoFim] = dataFimTexto.split('/');
+                            const dataFim = new Date(parseInt(anoFim), parseInt(mesFim) - 1, parseInt(diaFim));
+                            
+                            const dataFiltro = new Date(dataSelecionada);
+                            
+                            // Verificar se a data do filtro está dentro do período do agendamento
+                            if (dataFiltro < dataInicio || dataFiltro > dataFim) {
+                                mostrar = false;
+                            }
                         }
                     }
                     
-                    // Mostrar ou esconder item
-                    item.style.display = mostrar ? 'flex' : 'none';
+                    if (mostrar) {
+                        item.style.display = 'flex';
+                        agendamentosVisiveis++;
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
+                
+                // Mostrar mensagem se não houver resultados
+                const container = document.querySelector('.horizontal-layout');
+                let mensagemVazia = container.querySelector('.no-results-message');
+                
+                if (agendamentosVisiveis === 0 && itens.length > 0) {
+                    if (!mensagemVazia) {
+                        mensagemVazia = document.createElement('div');
+                        mensagemVazia.className = 'empty-state';
+                        mensagemVazia.innerHTML = `
+                            <h3>Nenhum agendamento encontrado</h3>
+                            <p>Nenhum agendamento corresponde aos filtros aplicados.</p>
+                            <button id="btn-limpar-filtros-mensagem" class="btn-primary" style="margin-top: 10px;">
+                                Limpar Filtros
+                            </button>
+                        `;
+                        container.appendChild(mensagemVazia);
+                        
+                        // Adicionar evento ao botão da mensagem
+                        document.getElementById('btn-limpar-filtros-mensagem').addEventListener('click', limparFiltros);
+                    }
+                    mensagemVazia.style.display = 'block';
+                } else if (mensagemVazia) {
+                    mensagemVazia.style.display = 'none';
+                }
             }
             
             function limparFiltros() {
@@ -736,12 +781,19 @@
                 itens.forEach(item => {
                     item.style.display = 'flex';
                 });
+                
+                // Ocultar mensagem de nenhum resultado
+                const mensagemVazia = document.querySelector('.no-results-message');
+                if (mensagemVazia) {
+                    mensagemVazia.style.display = 'none';
+                }
             }
             
-            filtroSala.addEventListener('change', filtrarAgendamentos);
-            filtroStatus.addEventListener('change', filtrarAgendamentos);
-            filtroData.addEventListener('change', filtrarAgendamentos);
-            btnLimpar.addEventListener('click', limparFiltros);
+            // Adicionar eventos
+            if (filtroSala) filtroSala.addEventListener('change', filtrarAgendamentos);
+            if (filtroStatus) filtroStatus.addEventListener('change', filtrarAgendamentos);
+            if (filtroData) filtroData.addEventListener('change', filtrarAgendamentos);
+            if (btnLimpar) btnLimpar.addEventListener('click', limparFiltros);
         });
     </script>
 </body>

@@ -149,4 +149,5 @@ urlpatterns = [
     
     # NOVA URL DO CALENDÁRIO - CORRIGIDA
     path('calendario/', views.calendario_agendamentos, name='calendario_agendamentos'),
+    path('meus-agendamentos/', views.meus_agendamentos, name='meus_agendamentos'),
 ]

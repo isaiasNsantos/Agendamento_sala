@@ -450,27 +450,34 @@
         </div>
     </div>
 
-    <!-- Conteúdo Principal -->
-    <div class="main-container">
-        <!-- Menu Lateral -->
-        <div class="sidebar">
-            <h3>Menu Principal</h3>
-            <ul class="nav-menu">
-                <li><a href="/" class="active">🏠 Início</a></li>
+    <!-- Conteúdo Principal --> 
+     
+    <div class="sidebar">
+        <h3>Menu Principal</h3>
+        <ul class="nav-menu">
+            <li><a href="/" class="active">🏠 Início</a></li>
+            {% if user.is_staff %}
                 <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
-                <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
+            {% endif %}
+            <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
+            {% if user.is_staff %}
                 <li><a href="/agendamentos/">📋 Agendamentos</a></li>
                 <li><a href="/disponibilidade/">📊 Disponibilidade</a></li>
-                <li><a href="/calendario/">📅 Calendário</a></li>
+            {% endif %}
+            <li><a href="/calendario/">📅 Calendário</a></li>
+            {% if user.is_staff %}
                 <li><a href="/relatorios/">📈 Relatórios</a></li>
-                {% if user.is_authenticated %}
-                <li><a href="/admin/">⚙️ Administração</a></li>
-                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
-                {% else %}
-                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <li><a href="/admin/">⚙️ Administração</a></li>
                 {% endif %}
-            </ul>
-        </div>
+                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+            {% else %}
+                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+            {% endif %}
+        </ul>
+    </div>
 
         <!-- Conteúdo -->
         <div class="content">

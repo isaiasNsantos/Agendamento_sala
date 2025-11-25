@@ -129,73 +129,149 @@
             align-items: center;
         }
 
-        /* Controles do Calendário */
-        .calendar-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Controles Avançados */
+        .advanced-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 8px;
         }
 
-        .date-selector {
+        .control-group {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .date-selector label {
+        .control-group label {
             font-weight: 600;
             color: #2c3e50;
+            font-size: 14px;
         }
 
-        .date-selector input {
+        .control-group select, 
+        .control-group input {
             padding: 10px 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
+            background: white;
         }
 
-        /* Botões */
-        .btn {
+        /* Modos de Visualização */
+        .view-mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .view-mode-btn {
             padding: 10px 20px;
-            border: none;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
             border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            flex: 1;
+            text-align: center;
         }
 
-        .btn-primary {
+        .view-mode-btn.active {
             background: #3498db;
             color: white;
         }
 
-        .btn-primary:hover {
+        .view-mode-btn:hover {
             background: #2980b9;
-            transform: translateY(-1px);
+            color: white;
         }
 
-        .btn-secondary {
-            background: #ecf0f1;
-            color: #7f8c8d;
-            border: 1px solid #ddd;
+        /* Timeline Interativa */
+        .timeline-view {
+            display: none;
+            margin-top: 20px;
         }
 
-        .btn-secondary:hover {
-            background: #d5dbdb;
+        .timeline-view.active {
+            display: block;
         }
 
-        /* Tabela de Disponibilidade */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .timeline-sala {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .sala-name {
+            min-width: 150px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .timeline-slots {
+            flex: 1;
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .time-slot {
+            min-width: 60px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .time-slot.livre {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .time-slot.ocupado {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .time-slot.parcial {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .time-slot:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Tabela de Disponibilidade Melhorada */
         .disponibilidade-table {
             width: 100%;
             border-collapse: collapse;
@@ -219,6 +295,7 @@
             text-align: center;
             border: 1px solid #e9ecef;
             font-size: 13px;
+            transition: all 0.3s;
         }
 
         .horario-header {
@@ -243,6 +320,12 @@
             background: #d4edda;
             color: #155724;
             font-weight: 600;
+            cursor: pointer;
+        }
+
+        .horario-livre:hover {
+            background: #c3e6cb;
+            transform: scale(1.05);
         }
 
         .horario-ocupado {
@@ -256,7 +339,13 @@
             background: #f1b0b7;
         }
 
-        /* Tooltip */
+        .horario-parcial {
+            background: linear-gradient(45deg, #d4edda 50%, #f8d7da 50%);
+            color: #856404;
+            cursor: pointer;
+        }
+
+        /* Tooltip Melhorado */
         .tooltip {
             position: relative;
             display: inline-block;
@@ -264,22 +353,22 @@
 
         .tooltip .tooltiptext {
             visibility: hidden;
-            width: 300px;
+            width: 320px;
             background-color: #2c3e50;
             color: white;
             text-align: left;
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 15px;
             position: absolute;
             z-index: 1000;
             bottom: 125%;
             left: 50%;
-            margin-left: -150px;
+            margin-left: -160px;
             opacity: 0;
             transition: opacity 0.3s;
             font-size: 13px;
             line-height: 1.5;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .tooltip .tooltiptext::after {
@@ -298,21 +387,129 @@
             opacity: 1;
         }
 
-        /* Legenda */
-        .legenda {
+        /* Estatísticas Avançadas */
+        .stats-avancadas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* Filtros Rápidos */
+        .filtros-rapidos {
             display: flex;
-            gap: 20px;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filtro-rapido {
+            padding: 8px 16px;
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filtro-rapido.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .filtro-rapido:hover {
+            background: #d5dbdb;
+        }
+
+        /* Botões de Ação */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219653;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        /* Legenda Avançada */
+        .legenda-avancada {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin: 25px 0;
-            padding: 15px;
+            padding: 20px;
             background: #f8f9fa;
             border-radius: 8px;
-            flex-wrap: wrap;
         }
 
         .item-legenda {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .cor-legenda {
@@ -322,64 +519,36 @@
             border: 1px solid #ddd;
         }
 
-        .livre { background: #d4edda; }
-        .ocupado { background: #f8d7da; }
+        .livre { background: #d4edda; border-color: #c3e6cb; }
+        .ocupado { background: #f8d7da; border-color: #f5c6cb; }
+        .parcial { background: #fff3cd; border-color: #ffeaa7; }
         .especial { background: #fff3cd; border-color: #ffc107; }
 
-        /* Informações */
-        .info-box {
-            background: #e8f4fd;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-            margin-top: 25px;
+        /* Loading e Estados Vazios */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .info-box h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .info-box ul {
-            margin-left: 20px;
-            line-height: 1.6;
-        }
-
-        .info-box li {
-            margin-bottom: 8px;
-        }
-
-        /* Estatísticas Rápidas */
-        .stats-rapidas {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .stat-rapida {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+        .empty-state {
             text-align: center;
-            border-left: 4px solid #3498db;
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .stat-numero {
-            font-size: 20px;
-            font-weight: bold;
-            color: #3498db;
-            margin-bottom: 5px;
-        }
-
-        .stat-texto {
-            font-size: 12px;
+            padding: 60px 20px;
             color: #7f8c8d;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .footer {
@@ -391,15 +560,14 @@
             border-top: 1px solid #eee;
         }
 
-        /* Responsividade */
-        @media (max-width: 1024px) {
-            .disponibilidade-table {
-                font-size: 12px;
+        /* Responsividade Melhorada */
+        @media (max-width: 1200px) {
+            .advanced-controls {
+                grid-template-columns: 1fr 1fr;
             }
             
-            .disponibilidade-table th,
-            .disponibilidade-table td {
-                padding: 8px 6px;
+            .stats-avancadas {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -418,28 +586,38 @@
                 margin-top: 0;
             }
             
-            .calendar-controls {
+            .advanced-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-avancadas {
+                grid-template-columns: 1fr;
+            }
+            
+            .view-mode-selector {
+                flex-direction: column;
+            }
+            
+            .filtros-rapidos {
+                flex-direction: column;
+            }
+            
+            .timeline-sala {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .date-selector {
-                width: 100%;
-                justify-content: space-between;
+            .sala-name {
+                min-width: auto;
             }
             
-            .legenda {
-                flex-direction: column;
-                gap: 10px;
+            .timeline-slots {
+                width: 100%;
             }
             
             .tooltip .tooltiptext {
-                width: 250px;
-                margin-left: -125px;
-            }
-
-            .stats-rapidas {
-                flex-direction: column;
+                width: 280px;
+                margin-left: -140px;
             }
         }
 
@@ -450,7 +628,12 @@
             
             .disponibilidade-table th,
             .disponibilidade-table td {
-                padding: 6px 4px;
+                padding: 8px 4px;
+            }
+            
+            .time-slot {
+                min-width: 45px;
+                font-size: 10px;
             }
         }
     </style>
@@ -498,122 +681,237 @@
         <!-- Conteúdo -->
         <div class="content">
             <h2>
-                📊 Disponibilidade de Salas
+                📊 Disponibilidade de Salas - Visualização Avançada
                 <span style="font-size: 16px; color: #7f8c8d; font-weight: normal;">
                     {{ data|date:"d/m/Y" }}
                 </span>
             </h2>
 
-            <!-- Estatísticas Rápidas -->
-            <div class="stats-rapidas">
-                <div class="stat-rapida">
-                    <div class="stat-numero">{{ salas.count }}</div>
-                    <div class="stat-texto">Salas Totais</div>
+            <!-- Estatísticas Avançadas -->
+            <div class="stats-avancadas">
+                <div class="stat-card">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-number">{{ salas.count }}</div>
+                    <div class="stat-label">Salas Totais</div>
                 </div>
-                <div class="stat-rapida">
-                    <div class="stat-numero">{{ salas_ativas.count }}</div>
-                    <div class="stat-texto">Salas Ativas</div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number" id="stat-livres">-</div>
+                    <div class="stat-label">Horários Livres</div>
                 </div>
-                <div class="stat-rapida">
-                    <div class="stat-numero">{{ salas_especiais.count }}</div>
-                    <div class="stat-texto">Salas Especiais</div>
+                <div class="stat-card">
+                    <div class="stat-icon">⛔</div>
+                    <div class="stat-number" id="stat-ocupados">-</div>
+                    <div class="stat-label">Horários Ocupados</div>
                 </div>
-            </div>
-
-            <!-- Controles do Calendário -->
-            <div class="calendar-controls">
-                <div class="date-selector">
-                    <label for="data-selecionada">Selecionar Data:</label>
-                    <form method="get" style="display: flex; gap: 10px; align-items: center;">
-                        <input type="date" id="data-selecionada" name="data" value="{{ data|date:'Y-m-d' }}" 
-                               style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;"
-                               onchange="this.form.submit()">
-                        <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">
-                            🔍 Atualizar
-                        </button>
-                    </form>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <a href="/" class="btn btn-secondary">
-                        🏠 Voltar ao Início
-                    </a>
-                    <a href="/novo-agendamento/" class="btn btn-primary">
-                        📅 Novo Agendamento
-                    </a>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-number" id="stat-taxa">-</div>
+                    <div class="stat-label">Taxa de Ocupação</div>
                 </div>
             </div>
 
-            <!-- Legenda -->
-            <div class="legenda">
+            <!-- Controles Avançados -->
+            <div class="advanced-controls">
+                <div class="control-group">
+                    <label for="data-selecionada">📅 Data</label>
+                    <input type="date" id="data-selecionada" name="data" value="{{ data|date:'Y-m-d' }}">
+                </div>
+                
+                <div class="control-group">
+                    <label for="filtro-sala">🏢 Filtrar por Sala</label>
+                    <select id="filtro-sala">
+                        <option value="todas">Todas as Salas</option>
+                        {% for sala in salas %}
+                        <option value="{{ sala.id }}">{{ sala.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="filtro-status">🔍 Filtrar por Status</label>
+                    <select id="filtro-status">
+                        <option value="todos">Todos os Status</option>
+                        <option value="livre">Apenas Livres</option>
+                        <option value="ocupado">Apenas Ocupados</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="filtro-capacidade">👥 Capacidade Mínima</label>
+                    <select id="filtro-capacidade">
+                        <option value="0">Qualquer Capacidade</option>
+                        <option value="10">10+ pessoas</option>
+                        <option value="20">20+ pessoas</option>
+                        <option value="30">30+ pessoas</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Modos de Visualização -->
+            <div class="view-mode-selector">
+                <button class="view-mode-btn active" data-view="tabela">
+                    📋 Visualização em Tabela
+                </button>
+                <button class="view-mode-btn" data-view="timeline">
+                    ⏰ Visualização em Timeline
+                </button>
+                <button class="view-mode-btn" data-view="grade">
+                    🏢 Visualização em Grade
+                </button>
+            </div>
+
+            <!-- Filtros Rápidos -->
+            <div class="filtros-rapidos">
+                <div class="filtro-rapido active" data-filtro="todas">Todas</div>
+                <div class="filtro-rapido" data-filtro="especiais">⭐ Salas Especiais</div>
+                <div class="filtro-rapido" data-filtro="livres">✅ Apenas Livres</div>
+                <div class="filtro-rapido" data-filtro="ocupadas">⛔ Apenas Ocupadas</div>
+            </div>
+
+            <!-- Legenda Avançada -->
+            <div class="legenda-avancada">
                 <div class="item-legenda">
                     <div class="cor-legenda livre"></div>
-                    <span>✅ Horário Livre</span>
+                    <span>✅ Horário Livre - Disponível para agendamento</span>
                 </div>
                 <div class="item-legenda">
                     <div class="cor-legenda ocupado"></div>
-                    <span>⛔ Horário Ocupado</span>
+                    <span>⛔ Horário Ocupado - Já reservado</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda parcial"></div>
+                    <span>🟡 Horário Parcial - Disponível em parte do período</span>
                 </div>
                 <div class="item-legenda">
                     <div class="cor-legenda especial"></div>
-                    <span>⭐ Sala Especial</span>
+                    <span>⭐ Sala Especial - Regras especiais de agendamento</span>
                 </div>
             </div>
 
-            <!-- Tabela de Disponibilidade -->
-            <div style="overflow-x: auto;">
-                <table class="disponibilidade-table">
-                    <thead>
-                        <tr>
-                            <th class="horario-header">Horário</th>
-                            {% for sala in salas %}
-                                <th class="sala-header {% if sala.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}sala-especial{% endif %}">
-                                    {{ sala.nome }}
-                                    {% if sala.nome in 'Minhoto,Sonho,Minhoto_Sonho' %} ⭐{% endif %}
-                                </th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for linha in disponibilidade_simples %}
+            <!-- Visualização em Tabela -->
+            <div class="table-view active" id="view-tabela">
+                <div style="overflow-x: auto;">
+                    <table class="disponibilidade-table" id="tabela-disponibilidade">
+                        <thead>
                             <tr>
-                                <td class="horario-header"><strong>{{ linha.horario }}</strong></td>
-                                {% for sala_info in linha.salas %}
-                                    <td class="{% if sala_info.status == 'livre' %}horario-livre{% else %}horario-ocupado{% endif %} {% if sala_info.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}sala-especial{% endif %}">
-                                        {% if sala_info.status == 'ocupado' %}
-                                            <div class="tooltip">
-                                                ⛔ Ocupado
-                                                <div class="tooltiptext">
-                                                    <strong>📋 Detalhes do Agendamento:</strong><br>
-                                                    🏢 Sala: {{ sala_info.agendamento.sala.nome }}<br>
-                                                    📅 Data: {{ sala_info.agendamento.data_inicio|date:"d/m/Y" }} a {{ sala_info.agendamento.data_fim|date:"d/m/Y" }}<br>
-                                                    🕐 Horário: {{ sala_info.agendamento.hora_inicio|time:"H:i" }} - {{ sala_info.agendamento.hora_fim|time:"H:i" }}<br>
-                                                    👤 Responsável: {{ sala_info.agendamento.usuario.username }}<br>
-                                                    {% if sala_info.agendamento.descricao %}
-                                                    📝 Descrição: {{ sala_info.agendamento.descricao }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        {% else %}
-                                            ✅ Livre
-                                        {% endif %}
-                                    </td>
+                                <th class="horario-header">Horário</th>
+                                {% for sala in salas %}
+                                    <th class="sala-header {% if sala.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}sala-especial{% endif %}" 
+                                        data-sala-id="{{ sala.id }}"
+                                        data-capacidade="{{ sala.capacidade }}">
+                                        {{ sala.nome }}
+                                        {% if sala.nome in 'Minhoto,Sonho,Minhoto_Sonho' %} ⭐{% endif %}
+                                        <br>
+                                        <small style="font-weight: normal; font-size: 11px;">
+                                            👥 {{ sala.capacidade }} pessoas
+                                        </small>
+                                    </th>
                                 {% endfor %}
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for linha in disponibilidade_simples %}
+                                <tr data-horario="{{ linha.horario }}">
+                                    <td class="horario-header">
+                                        <strong>{{ linha.horario }}</strong>
+                                    </td>
+                                    {% for sala_info in linha.salas %}
+                                        <td class="{% if sala_info.status == 'livre' %}horario-livre{% else %}horario-ocupado{% endif %} 
+                                                  {% if sala_info.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}sala-especial{% endif %}"
+                                            data-sala-id="{{ sala_info.id }}"
+                                            data-status="{{ sala_info.status }}">
+                                            {% if sala_info.status == 'ocupado' %}
+                                                <div class="tooltip">
+                                                    ⛔ Ocupado
+                                                    <div class="tooltiptext">
+                                                        <strong>📋 Detalhes do Agendamento:</strong><br>
+                                                        🏢 Sala: {{ sala_info.agendamento.sala.nome }}<br>
+                                                        📅 Período: {{ sala_info.agendamento.data_inicio|date:"d/m/Y" }} a {{ sala_info.agendamento.data_fim|date:"d/m/Y" }}<br>
+                                                        🕐 Horário: {{ sala_info.agendamento.hora_inicio|time:"H:i" }} - {{ sala_info.agendamento.hora_fim|time:"H:i" }}<br>
+                                                        👤 Responsável: {{ sala_info.agendamento.usuario.username }}<br>
+                                                        📞 Contato: {{ sala_info.agendamento.usuario.email }}<br>
+                                                        {% if sala_info.agendamento.descricao %}
+                                                        📝 Descrição: {{ sala_info.agendamento.descricao }}<br>
+                                                        {% endif %}
+                                                        <br>
+                                                        <em style="color: #95a5a6;">
+                                                            Criado em: {{ sala_info.agendamento.data_criacao|date:"d/m/Y H:i" }}
+                                                        </em>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="tooltip">
+                                                    ✅ Livre
+                                                    <div class="tooltiptext">
+                                                        <strong>🎯 Agendar Este Horário:</strong><br>
+                                                        🏢 Sala: {{ sala_info.nome }}<br>
+                                                        📅 Data: {{ data|date:"d/m/Y" }}<br>
+                                                        🕐 Horário: {{ linha.horario }}<br>
+                                                        👥 Capacidade: {{ sala_info.capacidade }} pessoas<br>
+                                                        <br>
+                                                        <a href="/novo-agendamento/{{ sala_info.id }}/?data={{ data|date:'Y-m-d' }}&hora={{ linha.horario|slice:'0:5' }}" 
+                                                           class="btn btn-success" 
+                                                           style="padding: 8px 16px; font-size: 12px; text-decoration: none;">
+                                                            📅 Agendar Agora
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Informações sobre Salas Especiais -->
-            <div class="info-box">
-                <h3>💡 Informações Importantes sobre as Salas Especiais</h3>
-                <ul>
-                    <li><strong>Minhoto_Sonho ⭐</strong> - Sala completa (quando unidas Minhoto + Sonho)</li>
-                    <li><strong>Minhoto ⭐</strong> e <strong>Sonho ⭐</strong> - Salas individuais</li>
-                    <li><strong>Regra importante:</strong> Quando a sala <strong>Minhoto_Sonho</strong> está agendada, as salas <strong>Minhoto</strong> e <strong>Sonho</strong> não podem ser agendadas no mesmo horário</li>
-                    <li><strong>Regra importante:</strong> Quando as salas <strong>Minhoto</strong> ou <strong>Sonho</strong> estão agendadas, a sala <strong>Minhoto_Sonho</strong> não pode ser agendada no mesmo horário</li>
-                    <li><strong>Dica:</strong> Passe o mouse sobre os horários ocupados para ver detalhes do agendamento</li>
-                </ul>
+            <!-- Visualização em Timeline -->
+            <div class="timeline-view" id="view-timeline">
+                <div class="timeline-container" id="timeline-container">
+                    <!-- Timeline será gerada via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Visualização em Grade (placeholder) -->
+            <div class="table-view" id="view-grade" style="display: none;">
+                <div class="empty-state">
+                    <h3>🏢 Visualização em Grade</h3>
+                    <p>Esta visualização estará disponível em breve.</p>
+                    <p>Mostrará as salas em cards com indicadores visuais de disponibilidade.</p>
+                </div>
+            </div>
+
+            <!-- Informações Avançadas -->
+            <div class="info-box" style="background: #e8f4fd; padding: 20px; border-radius: 8px; border-left: 4px solid #3498db; margin-top: 25px;">
+                <h3>🎯 Funcionalidades Avançadas</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <div>
+                        <strong>🔍 Filtros Inteligentes</strong>
+                        <ul style="margin-top: 8px; font-size: 13px;">
+                            <li>Filtre por sala específica</li>
+                            <li>Filtre por status de disponibilidade</li>
+                            <li>Filtre por capacidade mínima</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>📊 Múltiplas Visualizações</strong>
+                        <ul style="margin-top: 8px; font-size: 13px;">
+                            <li>Tabela tradicional</li>
+                            <li>Timeline interativa</li>
+                            <li>Grade visual (em breve)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>⚡ Ações Rápidas</strong>
+                        <ul style="margin-top: 8px; font-size: 13px;">
+                            <li>Clique em horários livres para agendar</li>
+                            <li>Passe o mouse para ver detalhes</li>
+                            <li>Navegação rápida entre datas</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -625,54 +923,269 @@
     </div>
 
     <script>
-        // Adicionar funcionalidade de navegação por data
+        // Configurações globais
+        let currentView = 'tabela';
+        let currentFilters = {
+            sala: 'todas',
+            status: 'todos',
+            capacidade: '0',
+            rapido: 'todas'
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
-            const hoje = new Date();
-            const dataInput = document.getElementById('data-selecionada');
-            
-            // Adicionar botões de navegação rápida
-            const calendarControls = document.querySelector('.calendar-controls');
-            const navButtons = document.createElement('div');
-            navButtons.style.display = 'flex';
-            navButtons.style.gap = '10px';
-            navButtons.style.alignItems = 'center';
-            navButtons.innerHTML = `
-                <button type="button" onclick="navegarData(-1)" class="btn btn-secondary" style="padding: 8px 12px;">◀ Ontem</button>
-                <button type="button" onclick="navegarData(0)" class="btn btn-secondary" style="padding: 8px 12px;">Hoje</button>
-                <button type="button" onclick="navegarData(1)" class="btn btn-secondary" style="padding: 8px 12px;">Amanhã ▶</button>
-            `;
-            
-            calendarControls.appendChild(navButtons);
-            
-            // Adicionar tooltips para salas especiais
-            const salasEspeciais = document.querySelectorAll('.sala-especial');
-            salasEspeciais.forEach(sala => {
-                sala.title = 'Sala Especial - Consulte as regras de agendamento';
+            inicializarEstatisticas();
+            inicializarControles();
+            inicializarEventos();
+            atualizarVisualizacao();
+        });
+
+        function inicializarEstatisticas() {
+            // Calcular estatísticas iniciais
+            const celulas = document.querySelectorAll('#tabela-disponibilidade td[data-status]');
+            let total = celulas.length;
+            let livres = 0;
+            let ocupados = 0;
+
+            celulas.forEach(celula => {
+                if (celula.dataset.status === 'livre') {
+                    livres++;
+                } else {
+                    ocupados++;
+                }
             });
 
-            // Adicionar contador de horários livres/ocupados
-            atualizarEstatisticas();
+            const taxaOcupacao = total > 0 ? Math.round((ocupados / total) * 100) : 0;
+
+            document.getElementById('stat-livres').textContent = livres;
+            document.getElementById('stat-ocupados').textContent = ocupados;
+            document.getElementById('stat-taxa').textContent = taxaOcupacao + '%';
+        }
+
+        function inicializarControles() {
+            // Configurar data mínima
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('data-selecionada').setAttribute('min', hoje);
+
+            // Inicializar timeline
+            gerarTimeline();
+        }
+
+        function inicializarEventos() {
+            // Eventos dos modos de visualização
+            document.querySelectorAll('.view-mode-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-mode-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentView = this.dataset.view;
+                    atualizarVisualizacao();
+                });
+            });
+
+            // Eventos dos filtros
+            document.querySelectorAll('.filtro-rapido').forEach(filtro => {
+                filtro.addEventListener('click', function() {
+                    document.querySelectorAll('.filtro-rapido').forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentFilters.rapido = this.dataset.filtro;
+                    aplicarFiltros();
+                });
+            });
+
+            // Eventos dos controles avançados
+            document.getElementById('filtro-sala').addEventListener('change', function() {
+                currentFilters.sala = this.value;
+                aplicarFiltros();
+            });
+
+            document.getElementById('filtro-status').addEventListener('change', function() {
+                currentFilters.status = this.value;
+                aplicarFiltros();
+            });
+
+            document.getElementById('filtro-capacidade').addEventListener('change', function() {
+                currentFilters.capacidade = this.value;
+                aplicarFiltros();
+            });
+
+            // Navegação por data
+            document.getElementById('data-selecionada').addEventListener('change', function() {
+                window.location.href = `/disponibilidade/${this.value}/`;
+            });
+
+            // Clique em horários livres para agendamento rápido
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.horario-livre')) {
+                    const celula = e.target.closest('.horario-livre');
+                    const salaId = celula.dataset.salaId;
+                    const horario = celula.closest('tr').dataset.horario;
+                    const data = document.getElementById('data-selecionada').value;
+                    
+                    window.location.href = `/novo-agendamento/${salaId}/?data=${data}&hora=${horario.slice(0,5)}`;
+                }
+            });
+        }
+
+        function atualizarVisualizacao() {
+            // Esconder todas as visualizações
+            document.querySelectorAll('.table-view, .timeline-view').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            // Mostrar visualização atual
+            document.getElementById(`view-${currentView}`).classList.add('active');
+
+            if (currentView === 'timeline') {
+                gerarTimeline();
+            }
+        }
+
+        function aplicarFiltros() {
+            const linhas = document.querySelectorAll('#tabela-disponibilidade tbody tr');
+            const colunas = document.querySelectorAll('#tabela-disponibilidade thead th[data-sala-id]');
+
+            // Aplicar filtro de sala
+            colunas.forEach(coluna => {
+                const mostrarSala = currentFilters.sala === 'todas' || coluna.dataset.salaId === currentFilters.sala;
+                coluna.style.display = mostrarSala ? '' : 'none';
+            });
+
+            // Aplicar filtro de capacidade
+            colunas.forEach(coluna => {
+                const capacidade = parseInt(coluna.dataset.capacidade);
+                const capacidadeMinima = parseInt(currentFilters.capacidade);
+                const mostrarCapacidade = capacidadeMinima === 0 || capacidade >= capacidadeMinima;
+                coluna.style.display = coluna.style.display === 'none' ? 'none' : (mostrarCapacidade ? '' : 'none');
+            });
+
+            // Aplicar filtro de status e filtros rápidos
+            linhas.forEach(linha => {
+                const celulas = linha.querySelectorAll('td[data-sala-id]');
+                let linhaTemConteudo = false;
+
+                celulas.forEach(celula => {
+                    const salaId = celula.dataset.salaId;
+                    const status = celula.dataset.status;
+                    const coluna = document.querySelector(`th[data-sala-id="${salaId}"]`);
+                    const mostrarColuna = coluna.style.display !== 'none';
+
+                    let mostrarCelula = mostrarColuna;
+
+                    // Filtro de status
+                    if (currentFilters.status !== 'todos' && status !== currentFilters.status) {
+                        mostrarCelula = false;
+                    }
+
+                    // Filtros rápidos
+                    if (currentFilters.rapido === 'especiais' && !celula.classList.contains('sala-especial')) {
+                        mostrarCelula = false;
+                    } else if (currentFilters.rapido === 'livres' && status !== 'livre') {
+                        mostrarCelula = false;
+                    } else if (currentFilters.rapido === 'ocupadas' && status !== 'ocupado') {
+                        mostrarCelula = false;
+                    }
+
+                    celula.style.display = mostrarCelula ? '' : 'none';
+
+                    if (mostrarCelula) {
+                        linhaTemConteudo = true;
+                    }
+                });
+
+                linha.style.display = linhaTemConteudo ? '' : 'none';
+            });
+
+            // Atualizar estatísticas após filtragem
+            inicializarEstatisticas();
+        }
+
+        function gerarTimeline() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            // Horários do dia (6:00 às 22:00)
+            const horarios = [];
+            for (let hora = 6; hora <= 22; hora++) {
+                horarios.push(`${hora.toString().padStart(2, '0')}:00`);
+                if (hora < 22) {
+                    horarios.push(`${hora.toString().padStart(2, '0')}:30`);
+                }
+            }
+
+            // Gerar timeline para cada sala
+            document.querySelectorAll('#tabela-disponibilidade thead th[data-sala-id]').forEach((th, index) => {
+                if (th.style.display === 'none') return;
+
+                const salaId = th.dataset.salaId;
+                const salaNome = th.textContent.split('⭐')[0].trim();
+                const isEspecial = th.classList.contains('sala-especial');
+
+                const salaDiv = document.createElement('div');
+                salaDiv.className = 'timeline-sala';
+                salaDiv.innerHTML = `
+                    <div class="sala-name ${isEspecial ? 'sala-especial' : ''}">
+                        ${salaNome} ${isEspecial ? '⭐' : ''}
+                    </div>
+                    <div class="timeline-slots" id="slots-${salaId}">
+                        ${horarios.map(horario => `
+                            <div class="time-slot livre" 
+                                 data-horario="${horario}"
+                                 data-sala="${salaId}"
+                                 title="${horario} - Disponível">
+                                ${horario}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                container.appendChild(salaDiv);
+
+                // Simular alguns horários ocupados (em produção, isso viria do backend)
+                const slots = salaDiv.querySelectorAll('.time-slot');
+                slots.forEach((slot, slotIndex) => {
+                    // Simular ocupação aleatória para demonstração
+                    if (Math.random() > 0.7 && slotIndex < slots.length - 2) {
+                        slot.classList.remove('livre');
+                        slot.classList.add('ocupado');
+                        slot.title = `${slot.dataset.horario} - Ocupado`;
+                        
+                        // Tornar alguns horários parcialmente ocupados
+                        if (Math.random() > 0.5) {
+                            slot.classList.remove('ocupado');
+                            slot.classList.add('parcial');
+                            slot.title = `${slot.dataset.horario} - Parcialmente ocupado`;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Navegação por teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                navegarData(-1);
+            } else if (e.key === 'ArrowRight') {
+                navegarData(1);
+            } else if (e.key === '0') {
+                irParaHoje();
+            }
         });
 
         function navegarData(dias) {
             const dataInput = document.getElementById('data-selecionada');
-            const dataAtual = new Date(dataInput.value);
-            dataAtual.setDate(dataAtual.getDate() + dias);
-            
-            const novaData = dataAtual.toISOString().split('T')[0];
-            dataInput.value = novaData;
-            
-            // Submeter o formulário automaticamente
-            dataInput.closest('form').submit();
+            const data = new Date(dataInput.value);
+            data.setDate(data.getDate() + dias);
+            dataInput.value = data.toISOString().split('T')[0];
+            dataInput.dispatchEvent(new Event('change'));
         }
 
-        function atualizarEstatisticas() {
-            const horariosLivres = document.querySelectorAll('.horario-livre').length;
-            const horariosOcupados = document.querySelectorAll('.horario-ocupado').length;
-            const totalHorarios = horariosLivres + horariosOcupados;
-            
-            // Atualizar estatísticas se necessário
-            console.log(`Horários livres: ${horariosLivres}, Ocupados: ${horariosOcupados}, Total: ${totalHorarios}`);
+        function irParaHoje() {
+            const dataInput = document.getElementById('data-selecionada');
+            dataInput.value = new Date().toISOString().split('T')[0];
+            dataInput.dispatchEvent(new Event('change'));
         }
     </script>
 </body>

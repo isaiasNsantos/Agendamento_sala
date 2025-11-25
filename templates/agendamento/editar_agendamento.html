@@ -93,14 +93,22 @@
 <body>
     <div class="menu">
         <a href="/">Início</a>
-        <a href="/salas/">Salas</a>
+        {% if user.is_staff %}
+            <a href="/salas/">Salas</a>
+        {% endif %}
         <a href="/novo-agendamento/">Novo Agendamento</a>
-        <a href="/gendamentos/"> Agendamentos</a>
-        <a href="/disponibilidade/">Disponibilidade</a>
+        {% if user.is_staff %}
+            <a href="/agendamentos/">Agendamentos</a>
+            <a href="/disponibilidade/">Disponibilidade</a>
+        {% endif %}
         <a href="/calendario/">Calendário</a>
-        <a href="/relatorios/">Relatórios</a>
+        {% if user.is_staff %}
+            <a href="/relatorios/">Relatórios</a>
+        {% endif %}
         {% if user.is_authenticated %}
-            <a href="/admin/">Admin</a>
+            {% if user.is_staff %}
+                <a href="/admin/">Admin</a>
+            {% endif %}
             <a href="/usuarios/logout/">Logout ({{ user.username }})</a>
         {% else %}
             <a href="/usuarios/login/">Login</a>

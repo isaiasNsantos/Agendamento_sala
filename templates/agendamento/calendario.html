@@ -513,9 +513,11 @@
             <a href="/agendamentos/" class="btn" style="background: #6c757d;">
                 📋 Ver Lista
             </a>
+            {% if user.is_staff or user.is_superuser %}
             <a href="/disponibilidade/" class="btn" style="background: #28a745;">
                 📊 Disponibilidade
             </a>
+            {% endif %}
         </div>
         
         <div class="calendar-container">
