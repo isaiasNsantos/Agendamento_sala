@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendário de Agendamentos - Sistema de Agendamento</title>
+    <!-- Incluir biblioteca QR Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -372,6 +374,70 @@
             border-left: 3px solid;
         }
         
+        /* Seção QR Code */
+        .qrcode-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+        
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .qrcode-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .qrcode-description {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            max-width: 500px;
+        }
+        
+        .qrcode-wrapper {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: inline-block;
+        }
+        
+        .qrcode-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .qrcode-stat {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .qrcode-stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .qrcode-stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
         /* Modal para detalhes do agendamento */
         .modal {
             display: none;
@@ -603,6 +669,41 @@
                 color: #999 !important;
             }
             
+            /* SEÇÃO QR CODE NA IMPRESSÃO */
+            .qrcode-section {
+                background: white !important;
+                color: black !important;
+                border: 2px solid #000 !important;
+                margin-top: 15px !important;
+                padding: 15px !important;
+                page-break-inside: avoid;
+            }
+            
+            .qrcode-title {
+                color: black !important;
+                font-size: 16px !important;
+            }
+            
+            .qrcode-description {
+                color: #333 !important;
+                font-size: 12px !important;
+            }
+            
+            .qrcode-wrapper {
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                padding: 10px !important;
+            }
+            
+            .qrcode-stats {
+                display: none !important; /* Ocultar stats na impressão para economizar espaço */
+            }
+            
+            .qrcode-stat {
+                background: #f0f0f0 !important;
+                color: black !important;
+            }
+            
             /* ESTATÍSTICAS */
             [style*="margin-top: 20px; display: grid;"] {
                 display: none !important;
@@ -653,6 +754,15 @@
             .modal-content {
                 width: 95%;
                 padding: 20px;
+            }
+            
+            .qrcode-section {
+                padding: 15px;
+            }
+            
+            .qrcode-stats {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -755,6 +865,39 @@
             </div>
         </div>
 
+        <!-- Seção QR Code para ver mais agendamentos -->
+        <div class="qrcode-section">
+            <div class="qrcode-container">
+                <div>
+                    <div class="qrcode-title">📱 Ver Agendamentos Online</div>
+                    <div class="qrcode-description">
+                        Escaneie este QR Code para ver todos os agendamentos em tempo real, 
+                        incluindo os que não cabem nesta página impressa. Veja disponibilidade 
+                        de salas e faça novos agendamentos diretamente pelo celular.
+                    </div>
+                </div>
+                
+                <div class="qrcode-wrapper">
+                    <div id="qrcode"></div>
+                </div>
+                
+                <div class="qrcode-stats">
+                    <div class="qrcode-stat">
+                        <span class="qrcode-stat-number" id="total-agendamentos">{{ total_agendamentos_mes }}</span>
+                        <span class="qrcode-stat-label">Agendamentos este mês</span>
+                    </div>
+                    <div class="qrcode-stat">
+                        <span class="qrcode-stat-number">{{ salas_disponiveis }}</span>
+                        <span class="qrcode-stat-label">Salas disponíveis</span>
+                    </div>
+                    <div class="qrcode-stat">
+                        <span class="qrcode-stat-number" id="dias-uteis">{{ dias_uteis }}</span>
+                        <span class="qrcode-stat-label">Dias úteis restantes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Legenda de Cores das Salas -->
         <div class="legenda-salas">
             <div class="item-legenda">
@@ -805,6 +948,12 @@
                 </div>
                 <div style="font-size: 14px; color: #555;">Salas disponíveis</div>
             </div>
+            <div style="padding: 15px; background: #fff3e0; border-radius: 8px; text-align: center;">
+                <div style="font-size: 24px; font-weight: bold; color: #ef6c00;">
+                    {{ total_agendamentos_mes }}
+                </div>
+                <div style="font-size: 14px; color: #555;">Agendamentos este mês</div>
+            </div>
         </div>
     </div>
 
@@ -850,6 +999,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Gerar QR Code
+            const qrcodeContainer = document.getElementById('qrcode');
+            const currentUrl = window.location.href;
+            
+            new QRCode(qrcodeContainer, {
+                text: currentUrl,
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
             // Navegação por teclado
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'ArrowLeft') {
@@ -939,6 +1101,32 @@
             // Ajustar na carga inicial e quando a janela for redimensionada
             adjustTextTruncation();
             window.addEventListener('resize', adjustTextTruncation);
+
+            // Calcular estatísticas em tempo real
+            function calcularEstatisticas() {
+                const eventos = document.querySelectorAll('.event');
+                const totalAgendamentos = eventos.length;
+                
+                // Atualizar contador de agendamentos
+                document.getElementById('total-agendamentos').textContent = totalAgendamentos;
+                
+                // Calcular dias úteis restantes no mês
+                const hoje = new Date();
+                const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
+                let diasUteisRestantes = 0;
+                
+                for (let dia = hoje.getDate(); dia <= ultimoDiaMes; dia++) {
+                    const dataTeste = new Date(hoje.getFullYear(), hoje.getMonth(), dia);
+                    // 0 = Domingo, 6 = Sábado
+                    if (dataTeste.getDay() !== 0 && dataTeste.getDay() !== 6) {
+                        diasUteisRestantes++;
+                    }
+                }
+                
+                document.getElementById('dias-uteis').textContent = diasUteisRestantes;
+            }
+            
+            calcularEstatisticas();
         });
 
         // Função para imprimir o calendário
