@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios - Sistema de Agendamento</title>
     <style>
+        /* [Seus estilos atuais para a tela] */
         * {
             margin: 0;
             padding: 0;
@@ -499,23 +500,24 @@
         .tipo-mensal .relatorio-semanal { display: none; }
         .tipo-mensal .relatorio-mensal { display: block; }
 
-        /* CSS ESPECÍFICO PARA IMPRESSÃO SIMPLIFICADA - CORRIGIDO */
+        /* CSS ESPECÍFICO PARA IMPRESSÃO - CORRIGIDO */
         @media print {
             @page {
                 size: landscape;
                 margin: 0.5cm;
             }
             
+            /* Reset para impressão */
             body {
-                font-size: 10px;
-                line-height: 1.1;
+                font-size: 10px !important;
+                line-height: 1.1 !important;
                 background: white !important;
                 color: black !important;
-                margin: 0;
-                padding: 0;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
-            /* OCULTAR ABSOLUTAMENTE TUDO EXCETO O ESSENCIAL */
+            /* OCULTAR ELEMENTOS NÃO NECESSÁRIOS NA IMPRESSÃO */
             .sidebar, 
             .btn-group, 
             .filtros-container, 
@@ -523,63 +525,140 @@
             .stats-cards,
             .filtros-info,
             .footer,
-            .content h2,
             .nav-menu,
             .user-info,
-            .main-container,
             .empty-state,
-            .tipo-relatorio-buttons {
+            .tipo-relatorio-buttons,
+            .btn-impressao {
                 display: none !important;
             }
             
-            /* MOSTRAR APENAS O TÍTULO E OS AGENDAMENTOS */
+            /* MOSTRAR ELEMENTOS ESSENCIAIS */
             .header {
+                display: block !important;
                 background: white !important;
                 color: black !important;
-                padding: 5px 0 !important;
+                padding: 10px 0 !important;
                 box-shadow: none !important;
                 text-align: center;
-                border-bottom: 2px solid #000;
-                margin-bottom: 10px;
-                display: block !important;
+                border-bottom: 2px solid #000 !important;
+                margin-bottom: 15px !important;
             }
             
             .header-content {
+                display: flex !important;
                 justify-content: center !important;
-                display: block !important;
+                align-items: center !important;
+                flex-direction: column !important;
             }
             
             .logo h1 {
                 font-size: 16px !important;
                 color: black !important;
-                margin-bottom: 2px;
-                font-weight: bold;
+                font-weight: bold !important;
+                margin: 0 !important;
             }
             
             .logo p {
                 font-size: 10px !important;
                 color: black !important;
+                margin: 5px 0 0 0 !important;
                 opacity: 1 !important;
-                margin: 0;
+            }
+            
+            /* CONTEÚDO PRINCIPAL */
+            .main-container {
+                display: block !important;
+                min-height: auto !important;
             }
             
             .content {
+                display: block !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 box-shadow: none !important;
                 background: white !important;
                 width: 100% !important;
-                display: block !important;
+                page-break-inside: avoid;
             }
             
-            /* MOSTRAR APENAS O RELATÓRIO SELECIONADO */
+            .content h2 {
+                display: block !important;
+                color: black !important;
+                font-size: 14px !important;
+                margin-bottom: 10px !important;
+                padding-bottom: 5px !important;
+                border-bottom: 1px solid #ccc !important;
+                text-align: center;
+            }
+            
+            /* RELATÓRIOS */
             .relatorio-container {
+                display: block !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                display: block !important;
+                overflow: visible !important;
             }
             
-            /* MOSTRAR APENAS O TIPO SELECIONADO */
+            /* GRUPOS DE SEMANA/MÊS */
+            .semana-group,
+            .mes-group {
+                display: block !important;
+                background: white !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                padding: 10px !important;
+                margin-bottom: 15px !important;
+                page-break-inside: avoid;
+            }
+            
+            .semana-header,
+            .mes-header {
+                display: block !important;
+                background: #f0f0f0 !important;
+                color: black !important;
+                padding: 8px 10px !important;
+                font-weight: bold !important;
+                margin-bottom: 8px !important;
+                border-bottom: 1px solid #000 !important;
+                font-size: 12px !important;
+            }
+            
+            /* TABELAS */
+            .semana-table,
+            .mes-table {
+                display: table !important;
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 8px !important;
+                page-break-inside: avoid;
+            }
+            
+            .semana-table th,
+            .mes-table th {
+                display: table-cell !important;
+                background: #e0e0e0 !important;
+                color: black !important;
+                padding: 6px 4px !important;
+                text-align: left !important;
+                border: 1px solid #000 !important;
+                font-weight: bold !important;
+            }
+            
+            .semana-table td,
+            .mes-table td {
+                display: table-cell !important;
+                padding: 4px 3px !important;
+                border: 1px solid #ccc !important;
+                vertical-align: top !important;
+            }
+            
+            .semana-table tr:nth-child(even),
+            .mes-table tr:nth-child(even) {
+                background: #f9f9f9 !important;
+            }
+            
+            /* CONTROLE DE TIPO DE RELATÓRIO NA IMPRESSÃO */
             .relatorio-semanal {
                 display: block !important;
             }
@@ -596,94 +675,16 @@
                 display: block !important;
             }
             
-            /* ESTILO PARA GRUPOS DE SEMANA NA IMPRESSÃO */
-            .semana-group {
+            /* EVITAR QUEBRA DE PÁGINA DENTRO DE LINHAS */
+            tr {
                 page-break-inside: avoid;
-                margin-bottom: 10px;
-                border: 1px solid #000;
-                padding: 5px;
-                background: white !important;
-                display: block !important;
+                page-break-after: auto;
             }
             
-            .semana-header {
-                background: #f0f0f0 !important;
+            /* MELHORAR VISUALIZAÇÃO DE TEXTO */
+            strong {
+                font-weight: bold !important;
                 color: black !important;
-                padding: 4px 6px;
-                font-weight: bold;
-                margin-bottom: 3px;
-                border-bottom: 1px solid #000;
-                font-size: 9px;
-                display: block !important;
-            }
-            
-            .semana-table {
-                width: 100%;
-                font-size: 8px;
-                border-collapse: collapse;
-                display: table !important;
-            }
-            
-            .semana-table th {
-                background: #e0e0e0 !important;
-                color: black !important;
-                padding: 3px 2px;
-                border: 1px solid #000;
-                font-weight: bold;
-            }
-            
-            .semana-table td {
-                padding: 2px 1px;
-                border: 1px solid #ccc;
-            }
-            
-            .semana-table tr:nth-child(even) {
-                background: #f9f9f9 !important;
-            }
-
-            /* ESTILO PARA GRUPOS MENSAS NA IMPRESSÃO */
-            .mes-group {
-                page-break-inside: avoid;
-                margin-bottom: 10px;
-                border: 1px solid #000;
-                padding: 5px;
-                background: white !important;
-                display: block !important;
-            }
-            
-            .mes-header {
-                background: #f0f0f0 !important;
-                color: black !important;
-                padding: 4px 6px;
-                font-weight: bold;
-                margin-bottom: 3px;
-                border-bottom: 1px solid #000;
-                font-size: 9px;
-                display: block !important;
-            }
-            
-            .mes-table {
-                width: 100%;
-                font-size: 8px;
-                border-collapse: collapse;
-                display: table !important;
-            }
-            
-            .mes-table th {
-                background: #e0e0e0 !important;
-                color: black !important;
-                padding: 3px 2px;
-                border: 1px solid #000;
-                font-weight: bold;
-            }
-            
-            .mes-table td {
-                padding: 2px 1px;
-                border: 1px solid #ccc;
-            }
-            
-            .mes-table tr:nth-child(even) {
-                background: #f9f9f9 !important;
             }
         }
 

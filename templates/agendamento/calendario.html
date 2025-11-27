@@ -334,6 +334,17 @@
         .btn:hover {
             background: #0d62c9;
         }
+
+        /* Botão de impressão específico */
+        .btn-print {
+            background: #9b59b6 !important;
+            color: white !important;
+            border: none !important;
+        }
+        
+        .btn-print:hover {
+            background: #8e44ad !important;
+        }
         
         /* Legenda de cores das salas */
         .legenda-salas {
@@ -434,6 +445,180 @@
             margin-top: 10px;
             border-left: 3px solid var(--primary-color);
         }
+
+        /* CSS ESPECÍFICO PARA IMPRESSÃO */
+        @media print {
+            @page {
+                size: landscape;
+                margin: 1cm;
+            }
+            
+            /* Reset para impressão */
+            body {
+                font-size: 12px !important;
+                line-height: 1.2 !important;
+                background: white !important;
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-family: 'Segoe UI', Arial, sans-serif !important;
+                width: 100% !important;
+            }
+            
+            /* OCULTAR ELEMENTOS DESNECESSÁRIOS */
+            .quick-actions,
+            .nav-btn,
+            .view-options,
+            .modal,
+            .btn-print,
+            .legenda-salas,
+            [style*="margin-bottom: 20px; padding: 10px;"] /* Menu de navegação rápida */ {
+                display: none !important;
+            }
+            
+            /* CABEÇALHO DE IMPRESSÃO */
+            .header {
+                display: block !important;
+                background: white !important;
+                color: black !important;
+                padding: 15px 0 !important;
+                box-shadow: none !important;
+                text-align: center;
+                border-bottom: 2px solid #000 !important;
+                margin-bottom: 20px !important;
+                position: relative !important;
+            }
+            
+            .header h1 {
+                font-size: 20px !important;
+                color: black !important;
+                font-weight: bold !important;
+                margin: 0 !important;
+            }
+            
+            .header-controls {
+                display: none !important;
+            }
+            
+            .current-date {
+                font-size: 16px !important;
+                color: black !important;
+                margin-top: 5px !important;
+            }
+            
+            /* CALENDÁRIO */
+            .container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .calendar-container {
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+            
+            .calendar-header {
+                background: #f0f0f0 !important;
+                border-bottom: 1px solid #000 !important;
+            }
+            
+            .day-header {
+                color: black !important;
+                font-weight: bold !important;
+                padding: 8px 4px !important;
+                font-size: 12px !important;
+            }
+            
+            .calendar-day {
+                min-height: 120px !important;
+                border-right: 1px solid #000 !important;
+                border-bottom: 1px solid #000 !important;
+                padding: 6px !important;
+                page-break-inside: avoid;
+            }
+            
+            .day-number {
+                font-size: 12px !important;
+                font-weight: bold !important;
+                margin-bottom: 4px !important;
+            }
+            
+            .today .day-number {
+                background: #e0e0e0 !important;
+                color: black !important;
+                border: 1px solid #000 !important;
+            }
+            
+            /* EVENTOS NA IMPRESSÃO */
+            .event {
+                padding: 4px 6px !important;
+                margin-bottom: 4px !important;
+                border-radius: 2px !important;
+                font-size: 10px !important;
+                border-left: 2px solid !important;
+                background: white !important;
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+            }
+            
+            .event-header {
+                margin-bottom: 1px !important;
+            }
+            
+            .sala-badge {
+                font-size: 9px !important;
+                padding: 1px 4px !important;
+                background: #e0e0e0 !important;
+                color: black !important;
+                text-shadow: none !important;
+                border: 1px solid #999 !important;
+            }
+            
+            .event-time {
+                font-size: 9px !important;
+                color: black !important;
+            }
+            
+            .event-user {
+                font-size: 9px !important;
+                color: black !important;
+                margin-bottom: 2px !important;
+            }
+            
+            .event-description {
+                font-size: 9px !important;
+                color: black !important;
+                max-height: none !important;
+            }
+            
+            .empty-day {
+                font-size: 10px !important;
+                color: #999 !important;
+            }
+            
+            .other-month {
+                background: #f9f9f9 !important;
+                color: #999 !important;
+            }
+            
+            /* ESTATÍSTICAS */
+            [style*="margin-top: 20px; display: grid;"] {
+                display: none !important;
+            }
+            
+            /* GARANTIR QUE TUDO FIQUE VISÍVEL */
+            * {
+                color: black !important;
+                border-color: #000 !important;
+            }
+            
+            /* EVITAR QUEBRA DE PÁGINA DENTRO DOS DIAS */
+            .calendar-day {
+                page-break-inside: avoid;
+            }
+        }
         
         @media (max-width: 768px) {
             .calendar-day {
@@ -502,6 +687,10 @@
                 <div class="view-options">
                     <button class="view-option active">Mês</button>
                 </div>
+                <!-- Botão de Impressão Adicionado -->
+                <button class="btn btn-print" onclick="imprimirCalendario()">
+                    🖨️ Imprimir
+                </button>
             </div>
         </div>
 
@@ -751,6 +940,11 @@
             adjustTextTruncation();
             window.addEventListener('resize', adjustTextTruncation);
         });
+
+        // Função para imprimir o calendário
+        function imprimirCalendario() {
+            window.print();
+        }
     </script>
 </body>
 </html>

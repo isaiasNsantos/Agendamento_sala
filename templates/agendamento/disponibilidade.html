@@ -15,6 +15,9 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #f8f9fa;
             color: #2c3e50;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -22,10 +25,11 @@
             color: white;
             padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
         }
 
         .header-content {
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
@@ -60,7 +64,12 @@
 
         .main-container {
             display: flex;
-            min-height: calc(100vh - 140px);
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            gap: 20px;
         }
 
         .sidebar {
@@ -69,7 +78,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             padding: 20px;
-            margin: 20px;
+            flex-shrink: 0;
+            height: fit-content;
         }
 
         .sidebar h3 {
@@ -114,9 +124,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             padding: 30px;
-            margin: 20px;
-            margin-left: 0;
             overflow-x: auto;
+            min-width: 0;
         }
 
         .content h2 {
@@ -556,8 +565,18 @@
             padding: 20px;
             color: #7f8c8d;
             font-size: 12px;
-            margin-top: 40px;
             border-top: 1px solid #eee;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        /* Views */
+        .view-content {
+            display: none;
+        }
+
+        .view-content.active {
+            display: block;
         }
 
         /* Responsividade Melhorada */
@@ -574,16 +593,15 @@
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
+                padding: 15px;
             }
             
             .sidebar {
-                width: calc(100% - 40px);
-                margin: 20px;
+                width: 100%;
             }
             
             .content {
-                margin: 20px;
-                margin-top: 0;
+                padding: 20px;
             }
             
             .advanced-controls {
@@ -663,17 +681,25 @@
             <h3>Menu Principal</h3>
             <ul class="nav-menu">
                 <li><a href="/">🏠 Início</a></li>
-                <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/salas/">🏢 Salas Disponíveis</a></li>
+                {% endif %}
                 <li><a href="/novo-agendamento/">📅 Novo Agendamento</a></li>
-                <li><a href="/agendamentos/">📋 Agendamentos</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/agendamentos/">📋 Agendamentos</a></li>
+                {% endif %}
                 <li><a href="/disponibilidade/" class="active">📊 Disponibilidade</a></li>
-                <li><a href="/relatorios/">📈 Relatórios</a></li>
                 <li><a href="/calendario/">📅 Calendário</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/relatorios/">📈 Relatórios</a></li>
+                {% endif %}
                 {% if user.is_authenticated %}
-                <li><a href="/admin/">⚙️ Administração</a></li>
-                <li><a href="/usuarios/logout/">🚪 Sair</a></li>
+                    {% if user.is_staff %}
+                        <li><a href="/admin/">⚙️ Administração</a></li>
+                    {% endif %}
+                    <li><a href="/usuarios/logout/">🚪 Sair</a></li>
                 {% else %}
-                <li><a href="/usuarios/login/">🔑 Entrar</a></li>
+                    <li><a href="/usuarios/login/">🔑 Entrar</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -714,7 +740,7 @@
             <!-- Controles Avançados -->
             <div class="advanced-controls">
                 <div class="control-group">
-                    <label for="data-selecionada">📅 Data</label>
+                    <label for="data-selecionada">📅 Desativado"Campo Data manut. "</label>
                     <input type="date" id="data-selecionada" name="data" value="{{ data|date:'Y-m-d' }}">
                 </div>
                 
@@ -737,15 +763,7 @@
                     </select>
                 </div>
                 
-                <div class="control-group">
-                    <label for="filtro-capacidade">👥 Capacidade Mínima</label>
-                    <select id="filtro-capacidade">
-                        <option value="0">Qualquer Capacidade</option>
-                        <option value="10">10+ pessoas</option>
-                        <option value="20">20+ pessoas</option>
-                        <option value="30">30+ pessoas</option>
-                    </select>
-                </div>
+                
             </div>
 
             <!-- Modos de Visualização -->
@@ -790,7 +808,7 @@
             </div>
 
             <!-- Visualização em Tabela -->
-            <div class="table-view active" id="view-tabela">
+            <div class="view-content active" id="view-tabela">
                 <div style="overflow-x: auto;">
                     <table class="disponibilidade-table" id="tabela-disponibilidade">
                         <thead>
@@ -868,14 +886,14 @@
             </div>
 
             <!-- Visualização em Timeline -->
-            <div class="timeline-view" id="view-timeline">
+            <div class="view-content" id="view-timeline">
                 <div class="timeline-container" id="timeline-container">
                     <!-- Timeline será gerada via JavaScript -->
                 </div>
             </div>
 
-            <!-- Visualização em Grade (placeholder) -->
-            <div class="table-view" id="view-grade" style="display: none;">
+            <!-- Visualização em Grade -->
+            <div class="view-content" id="view-grade">
                 <div class="empty-state">
                     <h3>🏢 Visualização em Grade</h3>
                     <p>Esta visualização estará disponível em breve.</p>
@@ -1011,7 +1029,7 @@
 
             // Navegação por data
             document.getElementById('data-selecionada').addEventListener('change', function() {
-                window.location.href = `/disponibilidade/${this.value}/`;
+                window.location.href = `/disponibilidade/?data=${this.value}`;
             });
 
             // Clique em horários livres para agendamento rápido
@@ -1025,11 +1043,23 @@
                     window.location.href = `/novo-agendamento/${salaId}/?data=${data}&hora=${horario.slice(0,5)}`;
                 }
             });
+
+            // Clique em slots da timeline
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.time-slot.livre')) {
+                    const slot = e.target.closest('.time-slot');
+                    const salaId = slot.dataset.sala;
+                    const horario = slot.dataset.horario;
+                    const data = document.getElementById('data-selecionada').value;
+                    
+                    window.location.href = `/novo-agendamento/${salaId}/?data=${data}&hora=${horario}`;
+                }
+            });
         }
 
         function atualizarVisualizacao() {
             // Esconder todas as visualizações
-            document.querySelectorAll('.table-view, .timeline-view').forEach(view => {
+            document.querySelectorAll('.view-content').forEach(view => {
                 view.classList.remove('active');
             });
 

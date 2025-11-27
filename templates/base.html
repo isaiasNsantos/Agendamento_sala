@@ -184,7 +184,7 @@
                 <!-- Apenas Admin vê Agendamentos completos -->
                 {% if user.is_staff or user.is_superuser %}
                 <li><a href="/agendamentos/" {% if '/agendamentos/' in request.path %}class="active"{% endif %}>📋 Agendamentos</a></li>
-                <li><a href="/disponibilidade/" {% if '/disponibilidade/' in request.path %}class="active"{% endif %}>📊 Disponibilidade</a></li>
+                
                 <li><a href="/relatorios/" {% if '/relatorios/' in request.path %}class="active"{% endif %}>📈 Relatórios</a></li>
                 {% endif %}
                 
