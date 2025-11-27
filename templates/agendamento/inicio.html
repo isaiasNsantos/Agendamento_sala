@@ -18,6 +18,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            /* Compensação para o header fixo */
+            padding-top: 90px;
         }
 
         .header {
@@ -26,6 +28,12 @@
             padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
+            /* Propriedades para fixar no topo */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .header-content {
@@ -429,6 +437,11 @@
             .quick-actions {
                 grid-template-columns: 1fr 1fr;
             }
+
+            /* Ajuste do padding-top no mobile */
+            body {
+                padding-top: 120px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -453,12 +466,17 @@
             .user-info {
                 text-align: center;
             }
+
+            /* Ajuste adicional para mobile muito pequeno */
+            body {
+                padding-top: 140px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho Fixo -->
     <div class="header">
         <div class="header-content">
             <div class="logo">
@@ -633,8 +651,9 @@
 
     <!-- Rodapé -->
     <div class="footer">
-        <p>Transformando a excelência na gestão em vantagem competitiva para sua empresa.</p>
-        <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte</p>
+        <p>Nossa Crença.</p>
+        <p>O negócio é bom quando é positivo para as partes envolvidas.</p>
+        <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte Filial Horizonte</p>
     </div>
 </body>
 </html>
