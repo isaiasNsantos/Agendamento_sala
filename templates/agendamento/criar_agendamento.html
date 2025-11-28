@@ -382,6 +382,38 @@
             gap: 8px;
         }
 
+        /* NOVO: Seção de Disponibilidade */
+        .disponibilidade-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+
+        .horarios-ocupados {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .horario-ocupado {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            border-left: 3px solid #dc3545;
+        }
+
+        .sala-livre {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 4px solid #28a745;
+        }
+
         .footer {
             text-align: center;
             padding: 20px;
@@ -933,6 +965,39 @@
                         ⚠️ <span id="mensagem-horario"></span>
                     </div>
                 </div>
+
+                <!-- NOVA SEÇÃO: Disponibilidade para Sala/Data Pré-Selecionada -->
+                {% if disponibilidade_info %}
+                <div class="form-section disponibilidade-section">
+                    <h3>📊 Disponibilidade para {{ disponibilidade_info.sala.nome }} em {{ disponibilidade_info.data|date:"d/m/Y" }}</h3>
+                    
+                    {% if disponibilidade_info.agendamentos %}
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+                        <h4>Horários Ocupados:</h4>
+                        <div class="horarios-ocupados">
+                            {% for agendamento in disponibilidade_info.agendamentos %}
+                            <div class="horario-ocupado">
+                                ⛔ {{ agendamento.hora_inicio|time:"H:i" }} - {{ agendamento.hora_fim|time:"H:i" }}
+                                <br>
+                                <small>{{ agendamento.usuario.username }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="sala-livre">
+                        ✅ Sala livre o dia todo
+                    </div>
+                    {% endif %}
+                    
+                    <div style="margin-top: 15px; text-align: center;">
+                        <a href="/disponibilidade/?sala={{ disponibilidade_info.sala.id }}&data={{ disponibilidade_info.data|date:'Y-m-d' }}" 
+                           class="btn btn-primary" style="text-decoration: none; padding: 10px 20px; display: inline-block; font-size: 14px;">
+                            📅 Ver Disponibilidade Completa
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
 
                 <!-- Seção: Descrição -->
                 <div class="form-section">

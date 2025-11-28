@@ -274,10 +274,22 @@
             border: 1px solid #ffeaa7;
         }
 
+        .time-slot.indisponivel {
+            background: #e9ecef;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            cursor: not-allowed;
+        }
+
         .time-slot:hover {
             transform: scale(1.05);
             z-index: 10;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .time-slot.indisponivel:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         /* Tabela de Disponibilidade Melhorada */
@@ -346,6 +358,17 @@
 
         .horario-ocupado:hover {
             background: #f1b0b7;
+        }
+
+        .horario-indisponivel {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .horario-indisponivel:hover {
+            background: #dee2e6;
         }
 
         .horario-parcial {
@@ -532,6 +555,7 @@
         .ocupado { background: #f8d7da; border-color: #f5c6cb; }
         .parcial { background: #fff3cd; border-color: #ffeaa7; }
         .especial { background: #fff3cd; border-color: #ffc107; }
+        .indisponivel { background: #e9ecef; border-color: #6c757d; }
 
         /* Loading e Estados Vazios */
         .loading {
@@ -739,7 +763,7 @@
             <!-- Controles Avançados -->
             <div class="advanced-controls">
                 <div class="control-group">
-                    <label for="data-selecionada">📅 Desativado"Campo Data manut. "</label>
+                    <label for="data-selecionada">📅 Data</label>
                     <input type="date" id="data-selecionada" name="data" value="{{ data|date:'Y-m-d' }}">
                 </div>
                 
@@ -759,10 +783,9 @@
                         <option value="todos">Todos os Status</option>
                         <option value="livre">Apenas Livres</option>
                         <option value="ocupado">Apenas Ocupados</option>
+                        <option value="indisponivel">Apenas Indisponíveis</option>
                     </select>
                 </div>
-                
-                
             </div>
 
             <!-- Modos de Visualização -->
@@ -784,6 +807,7 @@
                 <div class="filtro-rapido" data-filtro="especiais">⭐ Salas Especiais</div>
                 <div class="filtro-rapido" data-filtro="livres">✅ Apenas Livres</div>
                 <div class="filtro-rapido" data-filtro="ocupadas">⛔ Apenas Ocupadas</div>
+                <div class="filtro-rapido" data-filtro="indisponiveis">🚫 Apenas Indisponíveis</div>
             </div>
 
             <!-- Legenda Avançada -->
@@ -795,6 +819,10 @@
                 <div class="item-legenda">
                     <div class="cor-legenda ocupado"></div>
                     <span>⛔ Horário Ocupado - Já reservado</span>
+                </div>
+                <div class="item-legenda">
+                    <div class="cor-legenda indisponivel"></div>
+                    <span>🚫 Horário Indisponível - Conflito com sala combinada</span>
                 </div>
                 <div class="item-legenda">
                     <div class="cor-legenda parcial"></div>
@@ -834,7 +862,7 @@
                                         <strong>{{ linha.horario }}</strong>
                                     </td>
                                     {% for sala_info in linha.salas %}
-                                        <td class="{% if sala_info.status == 'livre' %}horario-livre{% else %}horario-ocupado{% endif %} 
+                                        <td class="{% if sala_info.status == 'livre' %}horario-livre{% elif sala_info.status == 'ocupado' %}horario-ocupado{% else %}horario-indisponivel{% endif %} 
                                                   {% if sala_info.nome in 'Minhoto,Sonho,Minhoto_Sonho' %}sala-especial{% endif %}"
                                             data-sala-id="{{ sala_info.id }}"
                                             data-status="{{ sala_info.status }}">
@@ -855,6 +883,30 @@
                                                         <em style="color: #95a5a6;">
                                                             Criado em: {{ sala_info.agendamento.data_criacao|date:"d/m/Y H:i" }}
                                                         </em>
+                                                    </div>
+                                                </div>
+                                            {% elif sala_info.status == 'indisponivel' %}
+                                                <div class="tooltip">
+                                                    🚫 Indisponível
+                                                    <div class="tooltiptext">
+                                                        <strong>📋 Motivo da Indisponibilidade:</strong><br>
+                                                        🏢 Sala: {{ sala_info.nome }}<br>
+                                                        📅 Data: {{ data|date:"d/m/Y" }}<br>
+                                                        🕐 Horário: {{ linha.horario }}<br>
+                                                        <br>
+                                                        {% if sala_info.nome == 'Minhoto_Sonho' and sala_info.agendamento and sala_info.agendamento.sala.nome in 'Minhoto,Sonho' %}
+                                                        <em style="color: #95a5a6;">
+                                                            ⚠️ A sala combinada não está disponível porque a sala {{ sala_info.agendamento.sala.nome }} está ocupada.
+                                                        </em>
+                                                        {% elif sala_info.nome in 'Minhoto,Sonho' and sala_info.agendamento and sala_info.agendamento.sala.nome == 'Minhoto_Sonho' %}
+                                                        <em style="color: #95a5a6;">
+                                                            ⚠️ A sala individual não está disponível porque a sala combinada Minhoto_Sonho está ocupada.
+                                                        </em>
+                                                        {% else %}
+                                                        <em style="color: #95a5a6;">
+                                                            ⚠️ Esta sala não está disponível para agendamento neste horário devido a conflito com salas combinadas.
+                                                        </em>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             {% else %}
@@ -962,12 +1014,15 @@
             let total = celulas.length;
             let livres = 0;
             let ocupados = 0;
+            let indisponiveis = 0;
 
             celulas.forEach(celula => {
                 if (celula.dataset.status === 'livre') {
                     livres++;
-                } else {
+                } else if (celula.dataset.status === 'ocupado') {
                     ocupados++;
+                } else if (celula.dataset.status === 'indisponivel') {
+                    indisponiveis++;
                 }
             });
 
@@ -1018,11 +1073,6 @@
 
             document.getElementById('filtro-status').addEventListener('change', function() {
                 currentFilters.status = this.value;
-                aplicarFiltros();
-            });
-
-            document.getElementById('filtro-capacidade').addEventListener('change', function() {
-                currentFilters.capacidade = this.value;
                 aplicarFiltros();
             });
 
@@ -1080,14 +1130,6 @@
                 coluna.style.display = mostrarSala ? '' : 'none';
             });
 
-            // Aplicar filtro de capacidade
-            colunas.forEach(coluna => {
-                const capacidade = parseInt(coluna.dataset.capacidade);
-                const capacidadeMinima = parseInt(currentFilters.capacidade);
-                const mostrarCapacidade = capacidadeMinima === 0 || capacidade >= capacidadeMinima;
-                coluna.style.display = coluna.style.display === 'none' ? 'none' : (mostrarCapacidade ? '' : 'none');
-            });
-
             // Aplicar filtro de status e filtros rápidos
             linhas.forEach(linha => {
                 const celulas = linha.querySelectorAll('td[data-sala-id]');
@@ -1112,6 +1154,8 @@
                     } else if (currentFilters.rapido === 'livres' && status !== 'livre') {
                         mostrarCelula = false;
                     } else if (currentFilters.rapido === 'ocupadas' && status !== 'ocupado') {
+                        mostrarCelula = false;
+                    } else if (currentFilters.rapido === 'indisponiveis' && status !== 'indisponivel') {
                         mostrarCelula = false;
                     }
 

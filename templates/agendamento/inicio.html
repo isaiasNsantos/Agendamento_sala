@@ -631,8 +631,13 @@
                                     <br><small>{{ sala.descricao|truncatewords:8 }}</small>
                                     {% endif %}
                                 </div>
-                                <a href="/novo-agendamento/{{ sala.id }}/" class="btn-primary" style="padding: 8px 16px; font-size: 12px;">
+                                <!-- ATUALIZADO: Agora inclui a data atual no link -->
+                                <a href="/novo-agendamento/{{ sala.id }}/?data={% now 'Y-m-d' %}" class="btn-primary" style="padding: 8px 16px; font-size: 12px;">
                                     Agendar
+                                </a>
+                                <!-- NOVO: Link para ver disponibilidade da sala -->
+                                <a href="/disponibilidade/?sala={{ sala.id }}" class="btn-primary" style="padding: 8px 16px; font-size: 12px; background: #6c757d; margin-top: 5px;">
+                                    Ver Disponibilidade
                                 </a>
                             </div>
                             {% endfor %}
@@ -655,5 +660,33 @@
         <p>O negócio é bom quando é positivo para as partes envolvidas.</p>
         <p style="margin-top: 5px;">Sistema de Agendamento de Salas - Raymundo da Fonte Filial Horizonte</p>
     </div>
+
+    <script>
+        // Obter a data atual no formato YYYY-MM-DD
+        function getCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Atualizar todos os links de agendamento para incluir a data atual
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = getCurrentDate();
+            const agendarLinks = document.querySelectorAll('a[href*="/novo-agendamento/"]');
+            
+            agendarLinks.forEach(link => {
+                if (!link.href.includes('?')) {
+                    // Se o link não tem parâmetros, adiciona a data atual
+                    link.href = link.href + '?data=' + currentDate;
+                } else if (!link.href.includes('data=')) {
+                    // Se já tem parâmetros mas não tem data, adiciona a data
+                    link.href = link.href + '&data=' + currentDate;
+                }
+                // Se já tem data, não faz nada
+            });
+        });
+    </script>
 </body>
 </html>

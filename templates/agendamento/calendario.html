@@ -310,6 +310,56 @@
             font-size: 11px;
         }
         
+        /* NOVO: Estilo para link de agendamento rápido */
+        .quick-agendamento-link {
+            display: block;
+            text-align: center;
+            padding: 8px 4px;
+            margin-top: 8px;
+            background: #f8f9fa;
+            border: 1px dashed #28a745;
+            border-radius: 4px;
+            color: #28a745;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .quick-agendamento-link:hover {
+            background: #28a745;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+        }
+        
+        .quick-agendamento-link:active {
+            transform: translateY(0);
+        }
+
+        /* NOVO: Estilo para dias passados */
+        .past-day {
+            background-color: #f8f9fa;
+            opacity: 0.7;
+        }
+        
+        .past-day .day-number {
+            color: #6c757d;
+        }
+        
+        .finalizado-label {
+            display: block;
+            text-align: center;
+            padding: 6px 4px;
+            margin-top: 8px;
+            background: #6c757d;
+            border-radius: 4px;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
         .quick-actions {
             display: flex;
             gap: 10px;
@@ -538,6 +588,8 @@
             .modal,
             .btn-print,
             .legenda-salas,
+            .quick-agendamento-link,
+            .finalizado-label,
             [style*="margin-bottom: 20px; padding: 10px;"] /* Menu de navegação rápida */ {
                 display: none !important;
             }
@@ -765,6 +817,16 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            .quick-agendamento-link {
+                padding: 6px 3px;
+                font-size: 10px;
+            }
+            
+            .finalizado-label {
+                padding: 4px 3px;
+                font-size: 9px;
+            }
         }
     </style>
 </head>
@@ -833,7 +895,11 @@
             
             <div class="calendar-grid">
                 {% for dia in dias_calendario %}
-                <div class="calendar-day {% if not dia.eh_mes_atual %}other-month{% endif %} {% if dia.eh_hoje %}today{% endif %}">
+                <div class="calendar-day 
+                    {% if not dia.eh_mes_atual %}other-month{% endif %} 
+                    {% if dia.eh_hoje %}today{% endif %}
+                    {% if dia.eh_passado %}past-day{% endif %}">
+                    
                     <div class="day-number">{{ dia.dia }}</div>
                     
                     {% if dia.agendamentos %}
@@ -858,8 +924,27 @@
                         </div>
                         {% endwith %}
                         {% endfor %}
+                        
+                        <!-- NOVO: Mostrar "Finalizado" em dias passados com agendamentos -->
+                        {% if dia.eh_passado %}
+                        <div class="finalizado-label">✅ Finalizado</div>
+                        {% endif %}
+                        
                     {% elif dia.eh_mes_atual %}
-                        <div class="empty-day">Sem agendamentos</div>
+                        <!-- Dias do mês atual sem agendamentos -->
+                        {% if dia.eh_passado %}
+                            <!-- Dias passados sem agendamentos -->
+                            <div class="empty-day">Sem agendamentos</div>
+                            <div class="finalizado-label">⏹️ Finalizado</div>
+                        {% else %}
+                            <!-- Dias futuros sem agendamentos - mostrar link de agendamento rápido -->
+                            <div class="empty-day">Sem agendamentos</div>
+                            <a href="/novo-agendamento/?data={{ ano }}-{{ mes }}-{{ dia.dia|stringformat:'02d' }}" 
+                               class="quick-agendamento-link" 
+                               title="Clique para criar um agendamento neste dia">
+                                ➕ Agendar
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -1128,11 +1213,31 @@
             }
             
             calcularEstatisticas();
+
+            // NOVO: Adicionar efeito hover nos links de agendamento rápido
+            const quickLinks = document.querySelectorAll('.quick-agendamento-link');
+            quickLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 8px rgba(40, 167, 69, 0.3)';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            });
         });
 
         // Função para imprimir o calendário
         function imprimirCalendario() {
             window.print();
+        }
+
+        // NOVO: Função para agendamento rápido com data pré-selecionada
+        function agendamentoRapido(data) {
+            // Redireciona para a página de novo agendamento com a data pré-selecionada
+            window.location.href = `/novo-agendamento/?data=${data}`;
         }
     </script>
 </body>
