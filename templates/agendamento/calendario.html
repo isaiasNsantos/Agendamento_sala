@@ -8,14 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary-color: #1a73e8;
-            --light-gray: #f1f3f4;
-            --border-gray: #dadce0;
-            --text-dark: #202124;
-            --text-light: #5f6368;
-            --today-color: #1a73e8;
+            --primary-color: #3498db;
+            --light-gray: rgba(255, 255, 255, 0.08);
+            --border-gray: rgba(255, 255, 255, 0.1);
+            --text-dark: #e0e0e0;
+            --text-light: #b0b0b0;
+            --today-color: #3498db;
             
-            /* Cores das salas - mantendo as mesmas do sistema de salas */
+            /* Cores das salas - ajustadas para tema escuro */
             --sala-minhoto: #e74c3c;
             --sala-sonho: #9b59b6;
             --sala-minhoto-sonho: #e67e22;
@@ -25,15 +25,15 @@
             --sala-video: #34495e;
             --sala-presidencial: #d35400;
             
-            /* Cores claras para fundo */
-            --sala-minhoto-light: #fdedec;
-            --sala-sonho-light: #f4ecf7;
-            --sala-minhoto-sonho-light: #fef9e7;
-            --sala-reuniao-light: #ebf5fb;
-            --sala-treinamento-light: #eafaf1;
-            --sala-audio-light: #e8f8f5;
-            --sala-video-light: #ebedef;
-            --sala-presidencial-light: #fbeee6;
+            /* Cores escuras para fundo */
+            --sala-minhoto-light: rgba(231, 76, 60, 0.15);
+            --sala-sonho-light: rgba(155, 89, 182, 0.15);
+            --sala-minhoto-sonho-light: rgba(230, 126, 34, 0.15);
+            --sala-reuniao-light: rgba(52, 152, 219, 0.15);
+            --sala-treinamento-light: rgba(46, 204, 113, 0.15);
+            --sala-audio-light: rgba(26, 188, 156, 0.15);
+            --sala-video-light: rgba(52, 73, 94, 0.15);
+            --sala-presidencial-light: rgba(211, 84, 0, 0.15);
         }
         
         * {
@@ -44,9 +44,10 @@
         }
         
         body {
-            background-color: #fff;
+            background: linear-gradient(135deg, #0c1426 0%, #1a2a3a 100%);
             color: var(--text-dark);
             line-height: 1.5;
+            min-height: 100vh;
         }
         
         .container {
@@ -83,8 +84,8 @@
         }
         
         .nav-btn {
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-gray);
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
@@ -92,11 +93,12 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: inherit;
+            color: var(--text-dark);
+            transition: all 0.3s;
         }
         
         .nav-btn:hover {
-            background-color: var(--light-gray);
+            background: rgba(255, 255, 255, 0.2);
         }
         
         .current-date {
@@ -115,10 +117,12 @@
         
         .view-option {
             padding: 8px 16px;
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border: none;
             cursor: pointer;
             font-size: 14px;
+            color: var(--text-dark);
+            transition: all 0.3s;
         }
         
         .view-option.active {
@@ -127,16 +131,17 @@
         }
         
         .calendar-container {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--border-gray);
             border-radius: 8px;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
         
         .calendar-header {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            background-color: var(--light-gray);
+            background: rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid var(--border-gray);
         }
         
@@ -191,70 +196,72 @@
             cursor: pointer;
             overflow: hidden;
             border-left: 3px solid;
+            transition: all 0.3s;
         }
         
         .event:hover {
-            filter: brightness(0.95);
+            filter: brightness(1.2);
+            transform: translateY(-1px);
         }
         
         /* Classes específicas para cada tipo de sala */
         .event-minhoto {
             background-color: var(--sala-minhoto-light);
             border-left-color: var(--sala-minhoto);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-sonho {
             background-color: var(--sala-sonho-light);
             border-left-color: var(--sala-sonho);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-minhoto-sonho {
             background-color: var(--sala-minhoto-sonho-light);
             border-left-color: var(--sala-minhoto-sonho);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-reuniao {
             background-color: var(--sala-reuniao-light);
             border-left-color: var(--sala-reuniao);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-treinamento {
             background-color: var(--sala-treinamento-light);
             border-left-color: var(--sala-treinamento);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-audio {
             background-color: var(--sala-audio-light);
             border-left-color: var(--sala-audio);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-video {
             background-color: var(--sala-video-light);
             border-left-color: var(--sala-video);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-presidencial {
             background-color: var(--sala-presidencial-light);
             border-left-color: var(--sala-presidencial);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .event-default {
-            background-color: #e6f4ea;
+            background-color: rgba(52, 152, 219, 0.15);
             border-left-color: var(--primary-color);
-            color: #333;
+            color: #e0e0e0;
         }
         
         .other-month {
             color: var(--text-light);
-            background-color: #f8f9fa;
+            background-color: rgba(255, 255, 255, 0.05);
         }
         
         .event-header {
@@ -288,7 +295,7 @@
         
         .event-description {
             font-size: 11px;
-            color: #333;
+            color: #e0e0e0;
             line-height: 1.3;
             overflow: hidden;
             position: relative;
@@ -305,47 +312,64 @@
         }
         
         .empty-day {
-            color: #ccc;
+            color: #b0b0b0;
             font-style: italic;
             font-size: 11px;
         }
         
-        /* NOVO: Estilo para link de agendamento rápido */
+        /* NOVO: Estilo para link de agendamento rápido - SEMPRE VISÍVEL */
         .quick-agendamento-link {
             display: block;
             text-align: center;
             padding: 8px 4px;
             margin-top: 8px;
-            background: #f8f9fa;
-            border: 1px dashed #28a745;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px dashed #27ae60;
             border-radius: 4px;
-            color: #28a745;
+            color: #27ae60;
             text-decoration: none;
             font-size: 11px;
             font-weight: 500;
             transition: all 0.2s ease;
             cursor: pointer;
+            position: relative;
+            z-index: 10;
         }
         
         .quick-agendamento-link:hover {
-            background: #28a745;
+            background: #27ae60;
             color: white;
             transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
         }
         
         .quick-agendamento-link:active {
             transform: translateY(0);
         }
 
+        /* NOVO: Link de agendamento para dias passados (mais discreto) */
+        .quick-agendamento-link.past {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed #6c757d;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .quick-agendamento-link.past:hover {
+            background: rgba(108, 117, 125, 0.3);
+            color: #b0b0b0;
+            transform: none;
+            box-shadow: none;
+        }
+
         /* NOVO: Estilo para dias passados */
         .past-day {
-            background-color: #f8f9fa;
+            background-color: rgba(255, 255, 255, 0.05);
             opacity: 0.7;
         }
         
         .past-day .day-number {
-            color: #6c757d;
+            color: #b0b0b0;
         }
         
         .finalizado-label {
@@ -353,7 +377,7 @@
             text-align: center;
             padding: 6px 4px;
             margin-top: 8px;
-            background: #6c757d;
+            background: rgba(108, 117, 125, 0.5);
             border-radius: 4px;
             color: white;
             font-size: 10px;
@@ -365,8 +389,9 @@
             gap: 10px;
             margin-bottom: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 8px;
+            backdrop-filter: blur(10px);
         }
         
         .btn {
@@ -381,10 +406,12 @@
             align-items: center;
             gap: 5px;
             font-size: 14px;
+            transition: all 0.3s;
         }
         
         .btn:hover {
-            background: #0d62c9;
+            background: #2980b9;
+            transform: translateY(-1px);
         }
 
         /* Botão de impressão específico */
@@ -405,8 +432,9 @@
             gap: 10px;
             margin-top: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 8px;
+            backdrop-filter: blur(10px);
         }
         
         .item-legenda {
@@ -414,7 +442,7 @@
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            color: #2c3e50;
+            color: #e0e0e0;
         }
         
         .cor-legenda {
@@ -496,19 +524,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
         
         .modal-content {
-            background-color: white;
+            background: rgba(44, 62, 80, 0.95);
             padding: 25px;
             border-radius: 8px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .modal-header {
@@ -555,7 +585,7 @@
         }
         
         .description-box {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.08);
             padding: 12px;
             border-radius: 6px;
             margin-top: 10px;
@@ -833,7 +863,7 @@
 <body>
     <div class="container">
         <!-- Menu de Navegação Rápida -->
-        <div style="margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+        <div style="margin-bottom: 20px; padding: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 8px; backdrop-filter: blur(10px);">
             <a href="/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">🏠 Início</a>
             <a href="/salas/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">🏢 Salas</a>
             <a href="/novo-agendamento/" style="margin-right: 15px; text-decoration: none; color: var(--primary-color);">📅 Novo Agendamento</a>
@@ -872,11 +902,11 @@
             <a href="/novo-agendamento/" class="btn">
                 <span>+</span> Novo Agendamento
             </a>
-            <a href="/agendamentos/" class="btn" style="background: #6c757d;">
+            <a href="/agendamentos/" class="btn" style="background: rgba(108, 117, 125, 0.7);">
                 📋 Ver Lista
             </a>
             {% if user.is_staff or user.is_superuser %}
-            <a href="/disponibilidade/" class="btn" style="background: #28a745;">
+            <a href="/disponibilidade/" class="btn" style="background: #27ae60;">
                 📊 Disponibilidade
             </a>
             {% endif %}
@@ -898,10 +928,11 @@
                 <div class="calendar-day 
                     {% if not dia.eh_mes_atual %}other-month{% endif %} 
                     {% if dia.eh_hoje %}today{% endif %}
-                    {% if dia.eh_passado %}past-day{% endif %}">
+                    {% if dia.data and dia.data < hoje %}past-day{% endif %}">
                     
                     <div class="day-number">{{ dia.dia }}</div>
                     
+                    <!-- MOSTRAR AGENDAMENTOS EXISTENTES (se houver) -->
                     {% if dia.agendamentos %}
                         {% for agendamento in dia.agendamentos %}
                         {% with sala_class=agendamento.sala.nome|lower|cut:" "|cut:"_" %}
@@ -917,29 +948,29 @@
                                 📝 {{ agendamento.descricao }}
                             </div>
                             {% else %}
-                            <div class="event-description" style="color: #999; font-style: italic;">
+                            <div class="event-description" style="color: #b0b0b0; font-style: italic;">
                                 Sem descrição
                             </div>
                             {% endif %}
                         </div>
                         {% endwith %}
                         {% endfor %}
-                        
-                        <!-- NOVO: Mostrar "Finalizado" em dias passados com agendamentos -->
-                        {% if dia.eh_passado %}
-                        <div class="finalizado-label">✅ Finalizado</div>
-                        {% endif %}
-                        
-                    {% elif dia.eh_mes_atual %}
-                        <!-- Dias do mês atual sem agendamentos -->
-                        {% if dia.eh_passado %}
-                            <!-- Dias passados sem agendamentos -->
-                            <div class="empty-day">Sem agendamentos</div>
-                            <div class="finalizado-label">⏹️ Finalizado</div>
+                    {% else %}
+                        <!-- Mensagem apenas quando não há agendamentos -->
+                        <div class="empty-day">Sem agendamentos</div>
+                    {% endif %}
+                    
+                    <!-- LINK DE AGENDAMENTO - SEMPRE VISÍVEL (exceto em dias passados) -->
+                    {% if dia.eh_mes_atual %}
+                        {% if dia.data and dia.data < hoje %}
+                            <!-- Dias passados - link desativado -->
+                            <div class="finalizado-label">✅ Finalizado</div>
+                            <a href="#" class="quick-agendamento-link past" title="Dia passado - não é possível agendar">
+                                ⏹️ Agendar
+                            </a>
                         {% else %}
-                            <!-- Dias futuros sem agendamentos - mostrar link de agendamento rápido -->
-                            <div class="empty-day">Sem agendamentos</div>
-                            <a href="/novo-agendamento/?data={{ ano }}-{{ mes }}-{{ dia.dia|stringformat:'02d' }}" 
+                            <!-- Dias futuros (incluindo hoje) - link ativo -->
+                            <a href="/novo-agendamento/?data={{ ano }}-{{ mes|stringformat:'02d' }}-{{ dia.dia|stringformat:'02d' }}&hora={% now 'H:i' %}" 
                                class="quick-agendamento-link" 
                                title="Clique para criar um agendamento neste dia">
                                 ➕ Agendar
@@ -1022,23 +1053,23 @@
 
         <!-- Estatísticas Rápidas -->
         <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-            <div style="padding: 15px; background: #e8f5e9; border-radius: 8px; text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #2e7d32;">
+            <div style="padding: 15px; background: rgba(39, 174, 96, 0.15); border-radius: 8px; text-align: center; backdrop-filter: blur(10px);">
+                <div style="font-size: 24px; font-weight: bold; color: #27ae60;">
                     {{ dias_calendario|length }}
                 </div>
-                <div style="font-size: 14px; color: #555;">Dias no calendário</div>
+                <div style="font-size: 14px; color: #e0e0e0;">Dias no calendário</div>
             </div>
-            <div style="padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #1565c0;">
+            <div style="padding: 15px; background: rgba(52, 152, 219, 0.15); border-radius: 8px; text-align: center; backdrop-filter: blur(10px);">
+                <div style="font-size: 24px; font-weight: bold; color: #3498db;">
                     {{ salas|length }}
                 </div>
-                <div style="font-size: 14px; color: #555;">Salas disponíveis</div>
+                <div style="font-size: 14px; color: #e0e0e0;">Salas disponíveis</div>
             </div>
-            <div style="padding: 15px; background: #fff3e0; border-radius: 8px; text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #ef6c00;">
+            <div style="padding: 15px; background: rgba(230, 126, 34, 0.15); border-radius: 8px; text-align: center; backdrop-filter: blur(10px);">
+                <div style="font-size: 24px; font-weight: bold; color: #e67e22;">
                     {{ total_agendamentos_mes }}
                 </div>
-                <div style="font-size: 14px; color: #555;">Agendamentos este mês</div>
+                <div style="font-size: 14px; color: #e0e0e0;">Agendamentos este mês</div>
             </div>
         </div>
     </div>
@@ -1077,7 +1108,7 @@
                 </div>
             </div>
             <div style="text-align: right;">
-                <button class="btn" id="btn-editar" style="background: #6c757d; margin-right: 10px;">Editar</button>
+                <button class="btn" id="btn-editar" style="background: rgba(108, 117, 125, 0.7); margin-right: 10px;">Editar</button>
                 <button class="btn" id="btn-fechar">Fechar</button>
             </div>
         </div>
@@ -1215,11 +1246,11 @@
             calcularEstatisticas();
 
             // NOVO: Adicionar efeito hover nos links de agendamento rápido
-            const quickLinks = document.querySelectorAll('.quick-agendamento-link');
+            const quickLinks = document.querySelectorAll('.quick-agendamento-link:not(.past)');
             quickLinks.forEach(link => {
                 link.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-2px)';
-                    this.style.boxShadow = '0 4px 8px rgba(40, 167, 69, 0.3)';
+                    this.style.boxShadow = '0 4px 8px rgba(39, 174, 96, 0.3)';
                 });
                 
                 link.addEventListener('mouseleave', function() {
@@ -1227,6 +1258,44 @@
                     this.style.boxShadow = 'none';
                 });
             });
+
+            // NOVO: Desativar cliques em links de dias passados
+            document.querySelectorAll('.quick-agendamento-link.past').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Não é possível agendar em dias passados.');
+                });
+            });
+
+            // NOVO: Verificar se há parâmetros de data na URL e pré-preencher no formulário
+            function processarParametrosURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const dataURL = urlParams.get('data');
+                
+                if (dataURL) {
+                    // Se houver uma data na URL, destacar o dia correspondente
+                    const dataObj = new Date(dataURL + 'T00:00:00');
+                    const diaMes = dataObj.getDate();
+                    const mesURL = dataObj.getMonth() + 1;
+                    const anoURL = dataObj.getFullYear();
+                    
+                    // Verificar se é o mesmo mês/ano atual
+                    if (mesURL === {{ mes }} && anoURL === {{ ano }}) {
+                        const diasCalendario = document.querySelectorAll('.calendar-day');
+                        diasCalendario.forEach(dia => {
+                            const numeroDia = parseInt(dia.querySelector('.day-number').textContent);
+                            if (numeroDia === diaMes && !dia.classList.contains('other-month')) {
+                                // Adicionar destaque especial ao dia
+                                dia.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                                dia.style.border = '2px solid #3498db';
+                            }
+                        });
+                    }
+                }
+            }
+            
+            // Executar ao carregar a página
+            processarParametrosURL();
         });
 
         // Função para imprimir o calendário
@@ -1237,7 +1306,7 @@
         // NOVO: Função para agendamento rápido com data pré-selecionada
         function agendamentoRapido(data) {
             // Redireciona para a página de novo agendamento com a data pré-selecionada
-            window.location.href = `/novo-agendamento/?data=${data}`;
+            window.location.href = `/novo-agendamento/?data=${data}&hora={% now 'H:i' %}`;
         }
     </script>
 </body>

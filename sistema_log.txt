@@ -14,3 +14,9 @@ Operations to perform:
 Running migrations:
   No migrations to apply.
 [27/11/2025 10:58:20,65] Iniciando servidor Django... 
+[28/11/2025 18:22:07,96] Aplicando migracoes pendentes... 
+Operations to perform:
+  Apply all migrations: admin, agendamento, auth, contenttypes, sessions, usuarios
+Running migrations:
+  No migrations to apply.
+[28/11/2025 18:22:09,90] Iniciando servidor Django... 

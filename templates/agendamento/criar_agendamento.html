@@ -13,8 +13,9 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #2c3e50;
+            background: linear-gradient(135deg, #0c1426 0%, #1a2a3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
         }
 
         .header {
@@ -22,8 +23,7 @@
             color: white;
             padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-             position: sticky;
+            position: sticky;
             top: 0;
             z-index: 1000;
         }
@@ -65,10 +65,12 @@
         }
 
         .mobile-menu-content {
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             padding: 25px;
             margin-top: 60px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .mobile-menu-close {
@@ -93,7 +95,7 @@
         .mobile-menu .nav-menu a {
             display: block;
             padding: 12px 15px;
-            color: #2c3e50;
+            color: #e0e0e0;
             text-decoration: none;
             border-radius: 6px;
             transition: background 0.3s;
@@ -103,7 +105,7 @@
 
         .mobile-menu .nav-menu a:hover,
         .mobile-menu .nav-menu a.active {
-            background: #f0f7ff;
+            background: rgba(52, 152, 219, 0.2);
             color: #3498db;
         }
 
@@ -139,18 +141,20 @@
 
         .sidebar {
             width: 250px;
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar h3 {
             font-size: 16px;
             margin-bottom: 15px;
-            color: #2c3e50;
-            border-bottom: 1px solid #eee;
+            color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 10px;
         }
 
@@ -165,7 +169,7 @@
         .nav-menu a {
             display: block;
             padding: 10px 12px;
-            color: #2c3e50;
+            color: #e0e0e0;
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.3s;
@@ -173,7 +177,7 @@
         }
 
         .nav-menu a:hover {
-            background: #f0f7ff;
+            background: rgba(52, 152, 219, 0.2);
             color: #3498db;
         }
 
@@ -184,23 +188,25 @@
 
         .content {
             flex: 1;
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin: 20px;
             margin-left: 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .content h2 {
-            color: #2c3e50;
+            color: #e0e0e0;
             margin-bottom: 25px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .info-text {
-            background: #e8f4fd;
+            background: rgba(52, 152, 219, 0.1);
             padding: 15px 20px;
             border-radius: 8px;
             margin-bottom: 25px;
@@ -212,24 +218,24 @@
         }
 
         .error-message {
-            background: #fee;
-            color: #c33;
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
             padding: 15px 20px;
             border-radius: 8px;
             margin-bottom: 25px;
-            border-left: 4px solid #c33;
+            border-left: 4px solid #e74c3c;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         .success-message {
-            background: #efe;
-            color: #363;
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
             padding: 15px 20px;
             border-radius: 8px;
             margin-bottom: 25px;
-            border-left: 4px solid #363;
+            border-left: 4px solid #27ae60;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -257,17 +263,18 @@
 
         label {
             font-weight: 600;
-            color: #2c3e50;
+            color: #e0e0e0;
             font-size: 14px;
         }
 
         input, select, textarea {
             padding: 12px 15px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 6px;
             font-size: 15px;
             transition: all 0.3s;
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -308,7 +315,7 @@
             gap: 15px;
             margin-top: 10px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .btn {
@@ -339,26 +346,26 @@
         }
 
         .btn-primary:disabled {
-            background: #95a5a6;
+            background: rgba(149, 165, 166, 0.5);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
         .btn-secondary {
-            background: #ecf0f1;
-            color: #7f8c8d;
-            border: 1px solid #ddd;
+            background: rgba(236, 240, 241, 0.1);
+            color: #b0b0b0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             flex: 0.5;
         }
 
         .btn-secondary:hover {
-            background: #d5dbdb;
+            background: rgba(213, 219, 219, 0.2);
             transform: translateY(-1px);
         }
 
         .field-error {
-            color: #c33;
+            color: #e74c3c;
             font-size: 13px;
             margin-top: 5px;
             display: flex;
@@ -367,14 +374,14 @@
         }
 
         .form-section {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 8px;
             border-left: 4px solid #3498db;
         }
 
         .form-section h3 {
-            color: #2c3e50;
+            color: #e0e0e0;
             margin-bottom: 15px;
             font-size: 16px;
             display: flex;
@@ -384,7 +391,7 @@
 
         /* NOVO: Seção de Disponibilidade */
         .disponibilidade-section {
-            background: #fff3cd;
+            background: rgba(255, 193, 7, 0.1);
             border-left: 4px solid #ffc107;
             margin-top: 20px;
         }
@@ -397,39 +404,40 @@
         }
 
         .horario-ocupado {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(248, 215, 218, 0.2);
+            color: #e74c3c;
             padding: 8px 12px;
             border-radius: 4px;
             font-size: 12px;
-            border-left: 3px solid #dc3545;
+            border-left: 3px solid #e74c3c;
         }
 
         .sala-livre {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(212, 237, 218, 0.2);
+            color: #27ae60;
             padding: 15px;
             border-radius: 6px;
             text-align: center;
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #27ae60;
         }
 
         .footer {
             text-align: center;
             padding: 20px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             font-size: 12px;
             margin-top: 40px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         /* Calendário Mini */
         .calendario-mini {
             margin-top: 15px;
-            border: 1px solid #e9ecef;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 15px;
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .calendario-mini-header {
@@ -442,7 +450,7 @@
         .calendario-mini-mes {
             font-size: 14px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #e0e0e0;
         }
 
         .calendario-mini-navegacao {
@@ -452,15 +460,16 @@
 
         .btn-calendario-mini {
             padding: 4px 8px;
-            border: 1px solid #ddd;
-            background: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
+            color: #e0e0e0;
         }
 
         .btn-calendario-mini:hover {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .calendario-mini-grid {
@@ -473,7 +482,7 @@
         .calendario-mini-dia-semana {
             text-align: center;
             font-weight: 600;
-            color: #7f8c8d;
+            color: #b0b0b0;
             padding: 5px 0;
             font-size: 10px;
         }
@@ -485,10 +494,11 @@
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid transparent;
+            color: #e0e0e0;
         }
 
         .calendario-mini-dia:hover {
-            background: #e3f2fd;
+            background: rgba(52, 152, 219, 0.2);
         }
 
         .calendario-mini-dia.vazio {
@@ -497,8 +507,8 @@
         }
 
         .calendario-mini-dia.hoje {
-            background: #fff3cd;
-            border-color: #ffeaa7;
+            background: rgba(255, 243, 205, 0.2);
+            border-color: rgba(255, 234, 167, 0.3);
             font-weight: 600;
         }
 
@@ -509,20 +519,20 @@
         }
 
         .calendario-mini-dia.ocupado {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(248, 215, 218, 0.2);
+            color: #e74c3c;
             cursor: not-allowed;
         }
 
         .calendario-mini-dia.passado {
-            background: #f8f9fa;
-            color: #adb5bd;
+            background: rgba(255, 255, 255, 0.05);
+            color: #6c757d;
             cursor: not-allowed;
         }
 
         .calendario-mini-dia.disponivel {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(212, 237, 218, 0.2);
+            color: #27ae60;
             cursor: pointer;
         }
 
@@ -544,7 +554,7 @@
             width: 10px;
             height: 10px;
             border-radius: 2px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Status de disponibilidade */
@@ -557,20 +567,20 @@
         }
 
         .status-disponivel {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
+            background: rgba(212, 237, 218, 0.2);
+            color: #27ae60;
+            border-left: 4px solid #27ae60;
         }
 
         .status-indisponivel {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
+            background: rgba(248, 215, 218, 0.2);
+            color: #e74c3c;
+            border-left: 4px solid #e74c3c;
         }
 
         .status-alerta {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(255, 243, 205, 0.2);
+            color: #ffc107;
             border-left: 4px solid #ffc107;
         }
 
@@ -578,7 +588,7 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid #f3f3f3;
+            border: 2px solid rgba(243, 243, 243, 0.3);
             border-top: 2px solid #3498db;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -602,7 +612,7 @@
 
         .validation-hint {
             font-size: 12px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             margin-top: 4px;
             display: flex;
             align-items: center;
@@ -876,15 +886,15 @@
                                 <span>Sel.</span>
                             </div>
                             <div class="item-legenda-mini">
-                                <div class="cor-legenda-mini" style="background: #d4edda;"></div>
+                                <div class="cor-legenda-mini" style="background: #27ae60;"></div>
                                 <span>Disp.</span>
                             </div>
                             <div class="item-legenda-mini">
-                                <div class="cor-legenda-mini" style="background: #f8d7da;"></div>
+                                <div class="cor-legenda-mini" style="background: #e74c3c;"></div>
                                 <span>Ocup.</span>
                             </div>
                             <div class="item-legenda-mini">
-                                <div class="cor-legenda-mini" style="background: #fff3cd;"></div>
+                                <div class="cor-legenda-mini" style="background: #ffc107;"></div>
                                 <span>Hoje</span>
                             </div>
                         </div>
@@ -972,7 +982,7 @@
                     <h3>📊 Disponibilidade para {{ disponibilidade_info.sala.nome }} em {{ disponibilidade_info.data|date:"d/m/Y" }}</h3>
                     
                     {% if disponibilidade_info.agendamentos %}
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px;">
                         <h4>Horários Ocupados:</h4>
                         <div class="horarios-ocupados">
                             {% for agendamento in disponibilidade_info.agendamentos %}
@@ -1041,8 +1051,34 @@
 
     <script>
         // Variáveis globais
-        let mesAtual = new Date().getMonth() + 1;
-        let anoAtual = new Date().getFullYear();
+        // NOVO: Inicializar com a data da URL se disponível, senão usar data atual
+        function obterMesAnoInicial() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataURL = urlParams.get('data');
+            
+            if (dataURL) {
+                try {
+                    const dataObj = new Date(dataURL + 'T00:00:00');
+                    return {
+                        mes: dataObj.getMonth() + 1,
+                        ano: dataObj.getFullYear()
+                    };
+                } catch (e) {
+                    console.error('Erro ao processar data da URL:', e);
+                }
+            }
+            
+            // Fallback para data atual
+            const hoje = new Date();
+            return {
+                mes: hoje.getMonth() + 1,
+                ano: hoje.getFullYear()
+            };
+        }
+
+        const dataInicial = obterMesAnoInicial();
+        let mesAtual = dataInicial.mes;
+        let anoAtual = dataInicial.ano;
         let salaSelecionada = null;
         let diasOcupados = [];
         let validacaoAprovada = false;
@@ -1182,6 +1218,12 @@
             if (descricaoTextarea && !descricaoTextarea.getAttribute('placeholder')) {
                 descricaoTextarea.setAttribute('placeholder', 'Ex: Reunião de planejamento semanal, Treinamento de novos colaboradores, Apresentação para clientes...');
             }
+
+            // NOVO: Processar parâmetros da URL e carregar calendário automaticamente
+            setTimeout(function() {
+                processarParametrosURL();
+                carregarCalendarioAutomaticamente();
+            }, 100);
 
             // Validar formulário periodicamente
             setInterval(validarFormularioCompleto, 1000);
@@ -1366,6 +1408,8 @@
                 .then(data => {
                     diasOcupados = data.dias_ocupados || [];
                     renderizarCalendario();
+                    // NOVO: Destacar a data selecionada após carregar o calendário
+                    destacarDataSelecionada();
                 })
                 .catch(error => {
                     console.error('Erro ao carregar calendário:', error);
@@ -1378,8 +1422,8 @@
             const calendarioMes = document.getElementById('calendario-mini-mes');
             
             // Atualizar título do mês
-            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
-                          'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             calendarioMes.textContent = `${meses[mesAtual - 1]} ${anoAtual}`;
 
             // Obter primeiro dia do mês e quantidade de dias
@@ -1548,6 +1592,114 @@
                     validacaoAprovada = false;
                     validarFormularioCompleto();
                 });
+        }
+
+        // NOVO: Carregar calendário automaticamente se já houver sala selecionada
+        function carregarCalendarioAutomaticamente() {
+            const salaSelect = document.getElementById('id_sala');
+            
+            // Verificar se há uma sala pré-selecionada (vinda da URL)
+            if (salaSelect && salaSelect.value) {
+                salaSelecionada = salaSelect.value;
+                validarSala(salaSelect.value);
+                
+                // Mostrar e carregar o calendário
+                document.getElementById('calendario-mini').style.display = 'block';
+                carregarCalendario();
+                
+                // Verificar disponibilidade se já houver datas selecionadas
+                const dataInicio = document.getElementById('id_data_inicio').value;
+                const dataFim = document.getElementById('id_data_fim').value;
+                const horaInicio = document.getElementById('id_hora_inicio').value;
+                const horaFim = document.getElementById('id_hora_fim').value;
+                
+                if (dataInicio && dataFim && horaInicio && horaFim) {
+                    setTimeout(verificarDisponibilidadeTempoReal, 500);
+                }
+            }
+        }
+
+        // NOVO: Verificar se há parâmetros de data/hora na URL e pré-preencher
+        function processarParametrosURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataURL = urlParams.get('data');
+            const horaURL = urlParams.get('hora');
+            
+            if (dataURL) {
+                // Formatar a data para o formato do input (YYYY-MM-DD)
+                const dataObj = new Date(dataURL + 'T00:00:00');
+                const dataFormatada = dataObj.toISOString().split('T')[0];
+                
+                document.getElementById('id_data_inicio').value = dataFormatada;
+                document.getElementById('id_data_fim').value = dataFormatada;
+                
+                // Disparar eventos de change para atualizar validações
+                document.getElementById('id_data_inicio').dispatchEvent(new Event('change'));
+                document.getElementById('id_data_fim').dispatchEvent(new Event('change'));
+                
+                // NOVO: Atualizar o mini-calendário para o mês da data selecionada
+                const mesURL = dataObj.getMonth() + 1;
+                const anoURL = dataObj.getFullYear();
+                
+                if (mesURL !== mesAtual || anoURL !== anoAtual) {
+                    mesAtual = mesURL;
+                    anoAtual = anoURL;
+                    
+                    // Se já tiver uma sala selecionada, recarregar o calendário
+                    if (salaSelecionada) {
+                        setTimeout(() => {
+                            carregarCalendario();
+                            destacarDataSelecionada();
+                        }, 200);
+                    }
+                }
+            }
+            
+            if (horaURL) {
+                document.getElementById('id_hora_inicio').value = horaURL;
+                
+                // Calcular hora fim (1 hora depois como padrão)
+                const [hours, minutes] = horaURL.split(':');
+                let newHour = parseInt(hours) + 1;
+                if (newHour > 23) newHour = 23;
+                const horaFim = `${newHour.toString().padStart(2, '0')}:${minutes}`;
+                
+                document.getElementById('id_hora_fim').value = horaFim;
+                
+                // Disparar eventos de change
+                document.getElementById('id_hora_inicio').dispatchEvent(new Event('change'));
+                document.getElementById('id_hora_fim').dispatchEvent(new Event('change'));
+            }
+        }
+
+        // NOVO: Função para destacar a data selecionada da URL no mini-calendário
+        function destacarDataSelecionada() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataURL = urlParams.get('data');
+            
+            if (dataURL) {
+                const dataObj = new Date(dataURL + 'T00:00:00');
+                const diaSelecionado = dataObj.getDate();
+                const mesSelecionado = dataObj.getMonth() + 1;
+                const anoSelecionado = dataObj.getFullYear();
+                
+                // Verificar se estamos no mês correto
+                if (mesSelecionado === mesAtual && anoSelecionado === anoAtual) {
+                    setTimeout(() => {
+                        const diasCalendario = document.querySelectorAll('.calendario-mini-dia');
+                        diasCalendario.forEach(dia => {
+                            const numeroDia = parseInt(dia.textContent);
+                            if (numeroDia === diaSelecionado && !dia.classList.contains('vazio') && 
+                                !dia.classList.contains('other-month')) {
+                                dia.classList.add('selecionado');
+                                dia.style.backgroundColor = '#3498db';
+                                dia.style.color = 'white';
+                                dia.style.fontWeight = 'bold';
+                            }
+                        });
+                    }, 100);
+                }
+            }
         }
 
         // Prevenir envio do formulário se não estiver válido

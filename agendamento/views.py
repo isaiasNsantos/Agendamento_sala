@@ -1191,6 +1191,91 @@ def lista_salas(request):
 #         'salas': salas
 #     })
 
+# @login_required
+# def criar_agendamento(request, sala_id=None):
+#     sala = None
+#     if sala_id:
+#         sala = get_object_or_404(Sala, id=sala_id, ativa=True)
+    
+#     # Obter parâmetros da URL
+#     data_selecionada = request.GET.get('data')
+#     hora_selecionada = request.GET.get('hora')
+    
+#     if request.method == 'POST':
+#         form = AgendamentoForm(request.POST)
+#         if form.is_valid():
+#             agendamento = form.save(commit=False)
+#             agendamento.usuario = request.user
+            
+#             # Verificar disponibilidade antes de salvar
+#             conflitos = verificar_disponibilidade_sala(
+#                 agendamento.sala,
+#                 agendamento.data_inicio,
+#                 agendamento.data_fim,
+#                 agendamento.hora_inicio,
+#                 agendamento.hora_fim
+#             )
+            
+#             if conflitos:
+#                 messages.error(request, f'Conflito de agendamento encontrado para esta sala.')
+#                 for conflito in conflitos:
+#                     messages.error(request, f'Data {conflito["data"].strftime("%d/%m/%Y")} - {conflito["agendamento"].usuario.username}')
+#             else:
+#                 agendamento.save()
+#                 messages.success(request, 'Agendamento criado com sucesso!')
+#                 return redirect('pagina_inicial')
+#         else:
+#             messages.error(request, 'Por favor, corrija os erros abaixo.')
+#     else:
+#         # Pré-preencher o formulário com dados da URL
+#         initial = {'sala': sala} if sala else {}
+        
+#         # Se temos data e hora da URL, pré-preencher
+#         if data_selecionada and hora_selecionada:
+#             try:
+#                 data_obj = timezone.datetime.strptime(data_selecionada, '%Y-%m-%d').date()
+#                 hora_obj = timezone.datetime.strptime(hora_selecionada, '%H:%M').time()
+                
+#                 initial.update({
+#                     'data_inicio': data_obj,
+#                     'data_fim': data_obj,
+#                     'hora_inicio': hora_obj,
+#                     # Adicionar 1 hora como padrão para o fim
+#                     'hora_fim': (timezone.datetime.combine(data_obj, hora_obj) + timedelta(hours=1)).time()
+#                 })
+#             except ValueError:
+#                 # Se os parâmetros estiverem mal formatados, ignorar
+#                 pass
+        
+#         form = AgendamentoForm(initial=initial)
+    
+#     salas = Sala.objects.filter(ativa=True)
+    
+#     # Buscar disponibilidade para a sala selecionada (se houver)
+#     disponibilidade_info = None
+#     if sala and data_selecionada:
+#         try:
+#             data_obj = timezone.datetime.strptime(data_selecionada, '%Y-%m-%d').date()
+#             disponibilidade_info = {
+#                 'sala': sala,
+#                 'data': data_obj,
+#                 'agendamentos': Agendamento.objects.filter(
+#                     sala=sala,
+#                     data_inicio__lte=data_obj,
+#                     data_fim__gte=data_obj
+#                 ).order_by('hora_inicio')
+#             }
+#         except ValueError:
+#             disponibilidade_info = None
+    
+#     return render(request, 'agendamento/criar_agendamento.html', {
+#         'form': form,
+#         'sala': sala,
+#         'salas': salas,
+#         'data_selecionada': data_selecionada,
+#         'hora_selecionada': hora_selecionada,
+#         'disponibilidade_info': disponibilidade_info
+#     })
 @login_required
 def criar_agendamento(request, sala_id=None):
     sala = None
@@ -1201,6 +1286,20 @@ def criar_agendamento(request, sala_id=None):
     data_selecionada = request.GET.get('data')
     hora_selecionada = request.GET.get('hora')
     
+    # Inicializar mês e ano para o calendário
+    mes_calendario = timezone.now().month
+    ano_calendario = timezone.now().year
+    
+    # Se temos uma data na URL, usar essa data para o calendário
+    if data_selecionada:
+        try:
+            data_obj = timezone.datetime.strptime(data_selecionada, '%Y-%m-%d').date()
+            mes_calendario = data_obj.month
+            ano_calendario = data_obj.year
+        except ValueError:
+            # Se a data estiver mal formatada, usar o mês e ano atuais
+            pass
+
     if request.method == 'POST':
         form = AgendamentoForm(request.POST)
         if form.is_valid():
@@ -1227,24 +1326,40 @@ def criar_agendamento(request, sala_id=None):
         else:
             messages.error(request, 'Por favor, corrija os erros abaixo.')
     else:
-        # Pré-preencher o formulário com dados da URL
-        initial = {'sala': sala} if sala else {}
+        # Pré-preencher o formulário com dados da URL E da sala
+        initial = {}
+        
+        if sala:
+            initial['sala'] = sala
         
         # Se temos data e hora da URL, pré-preencher
-        if data_selecionada and hora_selecionada:
+        if data_selecionada:
             try:
                 data_obj = timezone.datetime.strptime(data_selecionada, '%Y-%m-%d').date()
-                hora_obj = timezone.datetime.strptime(hora_selecionada, '%H:%M').time()
-                
                 initial.update({
                     'data_inicio': data_obj,
                     'data_fim': data_obj,
-                    'hora_inicio': hora_obj,
-                    # Adicionar 1 hora como padrão para o fim
-                    'hora_fim': (timezone.datetime.combine(data_obj, hora_obj) + timedelta(hours=1)).time()
                 })
             except ValueError:
-                # Se os parâmetros estiverem mal formatados, ignorar
+                # Se a data estiver mal formatada, usar hoje
+                initial.update({
+                    'data_inicio': timezone.now().date(),
+                    'data_fim': timezone.now().date(),
+                })
+        
+        if hora_selecionada:
+            try:
+                hora_obj = timezone.datetime.strptime(hora_selecionada, '%H:%M').time()
+                initial.update({
+                    'hora_inicio': hora_obj,
+                    # Adicionar 1 hora como padrão para o fim
+                    'hora_fim': (timezone.datetime.combine(
+                        timezone.now().date() if not data_selecionada else data_obj, 
+                        hora_obj
+                    ) + timedelta(hours=1)).time()
+                })
+            except ValueError:
+                # Se a hora estiver mal formatada, ignorar
                 pass
         
         form = AgendamentoForm(initial=initial)
@@ -1274,8 +1389,11 @@ def criar_agendamento(request, sala_id=None):
         'salas': salas,
         'data_selecionada': data_selecionada,
         'hora_selecionada': hora_selecionada,
-        'disponibilidade_info': disponibilidade_info
+        'disponibilidade_info': disponibilidade_info,
+        'mes_calendario': mes_calendario,
+        'ano_calendario': ano_calendario,
     })
+
 
 @login_required
 def meus_agendamentos(request):

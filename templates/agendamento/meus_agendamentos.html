@@ -13,9 +13,10 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #2c3e50;
+            background: linear-gradient(135deg, #0c1426 0%, #1a2a3a 100%);
+            color: #e0e0e0;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         .header {
@@ -23,7 +24,7 @@
             color: white;
             padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-             position: sticky;
+            position: sticky;
             top: 0; 
             z-index: 1000;
         }
@@ -69,18 +70,20 @@
 
         .sidebar {
             width: 250px;
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar h3 {
             font-size: 16px;
             margin-bottom: 15px;
-            color: #2c3e50;
-            border-bottom: 1px solid #eee;
+            color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 10px;
         }
 
@@ -95,7 +98,7 @@
         .nav-menu a {
             display: block;
             padding: 10px 12px;
-            color: #2c3e50;
+            color: #e0e0e0;
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.3s;
@@ -103,7 +106,7 @@
         }
 
         .nav-menu a:hover {
-            background: #f0f7ff;
+            background: rgba(52, 152, 219, 0.2);
             color: #3498db;
         }
 
@@ -114,19 +117,21 @@
 
         .content {
             flex: 1;
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin: 20px;
             margin-left: 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .content h2 {
-            color: #2c3e50;
+            color: #e0e0e0;
             margin-bottom: 25px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -141,13 +146,15 @@
         }
 
         .stat-card {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.08);
             padding: 15px 20px;
             border-radius: 8px;
             text-align: center;
             border-left: 4px solid #3498db;
             flex: 1;
             min-width: 150px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-number {
@@ -159,7 +166,7 @@
 
         .stat-label {
             font-size: 13px;
-            color: #7f8c8d;
+            color: #b0b0b0;
         }
 
         /* Tabela de Agendamentos - Layout Horizontal */
@@ -171,18 +178,20 @@
 
         .agendamento-item {
             display: flex;
-            background: white;
-            border: 1px solid #e9ecef;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 20px;
             transition: transform 0.2s, box-shadow 0.2s;
             align-items: center;
             gap: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .agendamento-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .sala-info {
@@ -195,12 +204,12 @@
         .sala-nome {
             font-size: 18px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #e0e0e0;
         }
 
         .sala-capacidade {
             font-size: 13px;
-            color: #7f8c8d;
+            color: #b0b0b0;
         }
 
         .periodo-info {
@@ -218,22 +227,22 @@
 
         .data-label {
             font-size: 12px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             min-width: 70px;
         }
 
         .data-value {
             font-size: 14px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #e0e0e0;
         }
 
         .duracao {
-            background: #f1f1f1;
+            background: rgba(255, 255, 255, 0.1);
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 11px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             margin-left: 10px;
         }
 
@@ -250,7 +259,7 @@
         .descricao {
             flex: 1;
             font-size: 14px;
-            color: #555;
+            color: #c0c0c0;
             line-height: 1.4;
             max-width: 300px;
         }
@@ -272,18 +281,21 @@
         }
 
         .status-ativo {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.5);
         }
 
         .status-passado {
-            background: #ffebee;
-            color: #c62828;
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.5);
         }
 
         .status-futuro {
-            background: #e3f2fd;
-            color: #1565c0;
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.5);
         }
 
         .action-buttons {
@@ -312,6 +324,7 @@
 
         .btn-edit:hover {
             background: #e67e22;
+            transform: translateY(-1px);
         }
 
         .btn-delete {
@@ -321,18 +334,19 @@
 
         .btn-delete:hover {
             background: #c0392b;
+            transform: translateY(-1px);
         }
 
         .data-criacao {
             font-size: 11px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             text-align: center;
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #7f8c8d;
+            color: #b0b0b0;
         }
 
         .empty-state h3 {
@@ -352,19 +366,22 @@
             text-decoration: none;
             display: inline-block;
             font-weight: 600;
+            transition: all 0.3s;
         }
 
         .btn-primary:hover {
             background: #2980b9;
+            transform: translateY(-1px);
         }
 
         .footer {
             text-align: center;
             padding: 20px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             font-size: 12px;
             margin-top: 40px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         /* Filtros - LAYOUT ORIGINAL */
@@ -374,7 +391,7 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
             padding: 15px;
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
         }
 
@@ -386,27 +403,29 @@
 
         .filtro-item label {
             font-size: 14px;
-            color: #2c3e50;
+            color: #e0e0e0;
             margin-bottom: 0;
             font-weight: 600;
         }
 
         select, input {
             padding: 8px 12px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 4px;
             font-size: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
         }
 
         /* Destaque para itens importantes */
         .destaque-hoje {
-            background: #fff8e1 !important;
+            background: rgba(255, 193, 7, 0.1) !important;
             border-left: 4px solid #ffc107;
         }
 
         .destaque-proximo {
-            background: #e8f5e9 !important;
-            border-left: 4px solid #4caf50;
+            background: rgba(39, 174, 96, 0.1) !important;
+            border-left: 4px solid #27ae60;
         }
 
         /* Paginação */
@@ -417,12 +436,12 @@
             gap: 10px;
             margin-top: 30px;
             padding: 20px 0;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .pagination-info {
             font-size: 14px;
-            color: #7f8c8d;
+            color: #b0b0b0;
             margin: 0 15px;
         }
 
@@ -527,7 +546,7 @@
         <div class="content">
             <h2>
                 Meus Agendamentos
-                <span style="font-size: 16px; color: #7f8c8d; font-weight: normal;">
+                <span style="font-size: 16px; color: #b0b0b0; font-weight: normal;">
                     {{ agendamentos.paginator.count }} agendamento{{ agendamentos.paginator.count|pluralize }}
                 </span>
             </h2>
@@ -577,7 +596,7 @@
                     <input type="date" id="filtro-data">
                 </div>
                 <div class="filtro-item">
-                    <button id="btn-limpar-filtros" class="btn" style="background: #95a5a6; color: white;">Limpar Filtros</button>
+                    <button id="btn-limpar-filtros" class="btn" style="background: rgba(149, 165, 166, 0.5); color: white;">Limpar Filtros</button>
                 </div>
             </div>
 
